@@ -6,7 +6,7 @@ Author: Jakub Konka <[jakub.konka@strath.ac.uk](mailto:jakub.konka@strath.ac.uk)
 Chattify-email is a work-in-progress, simple Google Chrome extension that serves one simple purpose: to re-format your email exchange into something more readable, more like a chat archive. It is meant to perform the following 3 fundamental functions:
 + strip email signatures
 + remove any blockquote elements
-+ convert "From:...To:..."" blocks into a one-liner "On <date> <someone> wrote:"
++ convert "From:...To:..."" blocks into a one-liner "On this date that person wrote:"
 
 # Installation instructions
 In order to use the extension, you (obviously) need a Chrome browser (the latest if possible). In the browser, open new tab (ctrl+t), and navigate to an address:
