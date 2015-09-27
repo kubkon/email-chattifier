@@ -12,12 +12,16 @@ function fromToBlocksIntoOneLiners(topSearchElement) {
     var parent = $(matches[0]).parent();
     var localMatches = parent.find("*").filter(filterF);
 
-    // check if the last element of the array is the last element
-    // of the parent
+    // did we match multiple span elements or a single p element?
+    var numMatches = localMatches.length;
     var last = $(localMatches[localMatches.length-1]);
-    var next = last.next();
-    if (next.parent().get(0) === parent.get(0)) {
-      last = next;
+    if (numMatches > 1) {
+      // if multiple span elements, check if the last element of the
+      // array is the last element of the parent
+      var next = last.next();
+      if (next.parent().get(0) === parent.get(0)) {
+        last = next;
+      }
     }
 
     // insert breakpoint after the last element
@@ -32,19 +36,28 @@ function fromToBlocksIntoOneLiners(topSearchElement) {
       $(el).remove();
     });
     first.remove();
+    console.log(last, textContent);
 
     // extract relevant info from the text
     textContent = textContent.trim();
-    var fromRegExp = new RegExp(tags[0] + ":(.*)\n", "i");
-    var from = textContent.match(fromRegExp)[1].trim();
-    var dateRegExp = new RegExp(tags[2] + ":(.*)\n", "i");
-    var date = textContent.match(dateRegExp)[1].trim();
+    var fromRegExp = textContent.match(new RegExp(tags[0] + ":(.*)\n", "i"));
+    if (fromRegExp === null || fromRegExp.length < 1) {
+      // no point continuing; we must have found something we cannot handle
+      break;
+    }
+    var from = fromRegExp[1].trim();
+    var dateRegExp = textContent.match(new RegExp(tags[2] + ":(.*)\n", "i"));
+    if (dateRegExp === null || dateRegExp.length < 1) {
+      // no point continuing; we must have found something we cannot handle
+      break;
+    }
+    var date = dateRegExp[1].trim();
 
     // remove unwanted info and preserve the rest
     var unwantedRegExp = new RegExp("(" + tags.join("|") + "):.*\n", "g");
     textContent = textContent.replace(unwantedRegExp, "");
     textContent = textContent.replace(/(.*)\n/g, '$1<br />');
-    var output = "<div class='converted'><p>On " + date.trim() + ", " + from.trim() +
+    var output = "<div class='converted'><p>On " + date + ", " + from +
                  " wrote:</p><p>" + textContent + "</p></div>";
 
     $(output).insertAfter(breakpoint);
@@ -64,7 +77,7 @@ function removeBlockquotes(blockquoteElement) {
 }
 
 // convert From...To... blocks into one-liners
-fromToBlocksIntoOneLiners($("blockquote"));
+fromToBlocksIntoOneLiners($("body"));
 
 // remove blockquotes but preserve contents
 removeBlockquotes($("blockquote"));
