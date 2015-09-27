@@ -1,7 +1,9 @@
 function fromToBlocksIntoOneLiners(topSearchElement) {
+  var tags = ["From", "To", "Date", "Sent", "Subject", "Cc"];
+
   var filterF = function(i, el) {
-    var pattern = /(From|To|Sent|Subject|Cc|Date):/i;
-    return el.textContent.match(pattern);
+    var regExp = new RegExp("(" + tags.join("|") + "):", "g");
+    return el.textContent.match(regExp);
   };
 
   var matches = topSearchElement.find("*").filter(filterF).get().reverse();
@@ -31,11 +33,19 @@ function fromToBlocksIntoOneLiners(topSearchElement) {
     });
     first.remove();
 
-    console.log(textContent);
     // extract relevant info from the text
-    var from = textContent.match(/From:(.*)\n/i)[1].trim();
-    var date = textContent.match(/Date:(.*)\n/i)[1].trim();
-    var output = "<p class='converted'>On " + date + ", " + from + " wrote:\n</p>";
+    textContent = textContent.trim();
+    var fromRegExp = new RegExp(tags[0] + ":(.*)\n", "i");
+    var from = textContent.match(fromRegExp)[1].trim();
+    var dateRegExp = new RegExp(tags[2] + ":(.*)\n", "i");
+    var date = textContent.match(dateRegExp)[1].trim();
+
+    // remove unwanted info and preserve the rest
+    var unwantedRegExp = new RegExp("(" + tags.join("|") + "):.*\n", "g");
+    textContent = textContent.replace(unwantedRegExp, "");
+    textContent = textContent.replace(/(.*)\n/g, '$1<br />');
+    var output = "<div class='converted'><p>On " + date.trim() + ", " + from.trim() +
+                 " wrote:</p><p>" + textContent + "</p></div>";
 
     $(output).insertAfter(breakpoint);
     breakpoint.remove();
