@@ -36,7 +36,6 @@ function fromToBlocksIntoOneLiners(topSearchElement) {
       $(el).remove();
     });
     first.remove();
-    console.log(last, textContent);
 
     // extract relevant info from the text
     textContent = textContent.trim();
