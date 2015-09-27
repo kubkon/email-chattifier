@@ -10,14 +10,27 @@ while (matches.length > 0) {
   var parent = $(matches[0]).parent();
   var localMatches = parent.find("*").filter(filterF);
 
-  // insert breakpoint after either the last element of localMatches
-  var breakpoint = "breakpoint";
-  $(localMatches[localMatches.length-1]).insertAfter("<div id=" + breakpoint + "></div>");
-  $(localMatches[0]).nextUntil("#" + breakpoint).each(function(i, el) {
+  // insert breakpoint after the last element of localMatches
+  $("<div id=breakpoint></div>").insertAfter(localMatches[localMatches.length-1]);
+  var breakpoint = $("#breakpoint");
+  // save all text content of the block
+  var textContent = $(localMatches[0]).text();
+  $(localMatches[0]).nextUntil(breakpoint).each(function(i, el) {
+    textContent += $(el).text();
     $(el).remove();
   });
   $(localMatches[0]).remove();
-  $("#" + breakpoint).remove();
+
+  console.log(textContent);
+  // extract relevant info from the text
+  var from = textContent.match(/From:(.*)\n/i)[1].trim();
+  var date = textContent.match(/Date:(.*)\n/i)[1].trim();
+  var output = "<p class='converted'>On " + date + ", " + from + " wrote:\n</p>";
+
+  $(output).insertAfter(breakpoint);
+  breakpoint.remove();
+
+  break;
 
   matches = $(document).find("*").filter(filterF).get().reverse();
 }
