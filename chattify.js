@@ -10,9 +10,16 @@ function fromToBlocksIntoOneLiners(topSearchElement) {
     var parent = $(matches[0]).parent();
     var localMatches = parent.find("*").filter(filterF);
 
-    // insert breakpoint after the last element of localMatches
-    var first = $(localMatches[0]);
+    // check if the last element of the array is the last element
+    // of the parent
     var last = $(localMatches[localMatches.length-1]);
+    var next = last.next();
+    if (next.parent().get(0) === parent.get(0)) {
+      last = next;
+    }
+
+    // insert breakpoint after the last element
+    var first = $(localMatches[0]);
     $("<div id=breakpoint></div>").insertAfter(last);
     var breakpoint = $("#breakpoint");
 
