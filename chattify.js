@@ -7,7 +7,18 @@ function filterF(i, el) {
 var matches = $(document).find("*").filter(filterF).get().reverse();
 
 while (matches.length > 0) {
-  matches[0].remove();
+  var parent = $(matches[0]).parent();
+  var localMatches = parent.find("*").filter(filterF);
+
+  // insert breakpoint after either the last element of localMatches
+  var breakpoint = "breakpoint";
+  $(localMatches[localMatches.length-1]).insertAfter("<div id=" + breakpoint + "></div>");
+  $(localMatches[0]).nextUntil("#" + breakpoint).each(function(i, el) {
+    $(el).remove();
+  });
+  $(localMatches[0]).remove();
+  $("#" + breakpoint).remove();
+
   matches = $(document).find("*").filter(filterF).get().reverse();
 }
 
