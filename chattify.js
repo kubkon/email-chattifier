@@ -10,7 +10,7 @@ function fromToBlocksIntoOneLiners(topSearchElement) {
 
   while (matches.length > 0) {
     var parent = $(matches[0]).parent();
-    var localMatches = parent.find("*").filter(filterF);
+    var localMatches = parent.find("*:not(.converted)").filter(filterF);
 
     // did we match multiple span elements or a single p element?
     var numMatches = localMatches.length;
@@ -32,6 +32,9 @@ function fromToBlocksIntoOneLiners(topSearchElement) {
     // preserve all text content of the block
     var textContent = first.text();
     first.nextUntil(breakpoint).each(function(i, el) {
+      if ($(el).hasClass("converted")) {
+        return;
+      }
       textContent += $(el).text();
       $(el).remove();
     });
@@ -39,7 +42,7 @@ function fromToBlocksIntoOneLiners(topSearchElement) {
 
     // extract relevant info from the text
     textContent = textContent.trim();
-    var fromRegExp = textContent.match(new RegExp(tags[0] + ":(.*)\n", "i"));
+    var fromRegExp = textContent.match(new RegExp(tags[0] + ":(.*)\n*", "i"));
     if (fromRegExp === null || fromRegExp.length < 1) {
       // no point continuing; we must have found something we cannot handle
       break;
@@ -47,7 +50,7 @@ function fromToBlocksIntoOneLiners(topSearchElement) {
     // replace email address within <...> with an a element;
     // this might not be the most robust way of matching an email address though!
     var from = fromRegExp[1].trim().replace(/<(.*)>/g, "<a href=mailto:$1 target='_blank'>$1</a>");
-    var dateRegExp = textContent.match(new RegExp(tags[2] + ":(.*)\n", "i"));
+    var dateRegExp = textContent.match(new RegExp(tags[2] + ":(.*)\n*", "i"));
     if (dateRegExp === null || dateRegExp.length < 1) {
       // no point continuing; we must have found something we cannot handle
       break;
@@ -55,17 +58,17 @@ function fromToBlocksIntoOneLiners(topSearchElement) {
     var date = dateRegExp[1].trim();
 
     // remove unwanted info and preserve the rest
-    var unwantedRegExp = new RegExp("(" + tags.join("|") + "):.*\n", "g");
+    var unwantedRegExp = new RegExp("(" + tags.join("|") + "):.*\n*", "g");
     textContent = textContent.replace(unwantedRegExp, "");
     textContent = textContent.replace(/(.*)\n/g, '$1<br />');
-    var output = "<div class='converted'><p>On " + date + ", " + from +
-                 " wrote:</p><p>" + textContent + "</p></div>";
+    var output = "<div class='converted'><p class='converted'>On " + date + ", " + from +
+                 " wrote:</p><p class='converted'>" + textContent + "</p></div>";
 
     $(output).insertAfter(breakpoint);
     breakpoint.remove();
 
     // update matches array
-    matches = topSearchElement.find("*").filter(filterF).get().reverse();
+    matches = topSearchElement.find("*:not(converted)").filter(filterF).get().reverse();
   }
 }
 
