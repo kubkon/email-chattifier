@@ -44,7 +44,9 @@ function fromToBlocksIntoOneLiners(topSearchElement) {
       // no point continuing; we must have found something we cannot handle
       break;
     }
-    var from = fromRegExp[1].trim();
+    // replace email address within <...> with an a element;
+    // this might not be the most robust way of matching an email address though!
+    var from = fromRegExp[1].trim().replace(/<(.*)>/g, "<a href=mailto:$1 target='_blank'>$1</a>");
     var dateRegExp = textContent.match(new RegExp(tags[2] + ":(.*)\n", "i"));
     if (dateRegExp === null || dateRegExp.length < 1) {
       // no point continuing; we must have found something we cannot handle
@@ -68,11 +70,18 @@ function fromToBlocksIntoOneLiners(topSearchElement) {
 }
 
 function removeBlockquotes(blockquoteElement) {
-  $(blockquoteElement.get().reverse()).each(function(i, el) {
+  blockquoteElement.each(function(i, el) {
     var contents = $(el).contents();
     contents.insertAfter($(el));
     $(el).remove();
   });
+}
+
+function colourEncode(topSearchElement) {
+  // var filterF = function(i, el) {
+  //   var regExp = new RegExp("On <date><time>, somebody wrote:", "g");
+  // };
+  // var matches = topSearchElement.find("*").filter(filterF).get().reverse();
 }
 
 // convert From...To... blocks into one-liners
@@ -80,3 +89,6 @@ fromToBlocksIntoOneLiners($("body"));
 
 // remove blockquotes but preserve contents
 removeBlockquotes($("blockquote"));
+
+// colour encode the conversation and add horizontal separators
+colourEncode($("body"));
