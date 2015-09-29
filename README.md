@@ -1,8 +1,6 @@
 chattify-email
 ===
 
-Author: Jakub Konka <[jakub.konka@strath.ac.uk](mailto:jakub.konka@strath.ac.uk)>
-
 Chattify-email is a work-in-progress, simple Google Chrome extension that serves one simple purpose: to re-format your email exchange into something more readable, more like a chat archive. It is meant to perform the following 3 fundamental functions:
 + strip email signatures
 + remove any blockquote elements
@@ -19,3 +17,6 @@ Enable the developer mode, and click on the "Load unpacked extension..." button.
 
 # Found a bug?
 If you have discovered a bug, or would like to discuss its current and future functionality, feel free to submit a Github issue, and assign it to me.
+
+# License
+MIT licenses, see [License.md](License.md).
