@@ -81,11 +81,24 @@ function removeBlockquotes() {
   });
 
   // remove &gt; which is used as the blockquote element
-  // FIX:ME this also removes right bracket in <email_address>
   weirdBlockquote = "&gt;";
   var regExp = new RegExp(weirdBlockquote, "g");
   var contents = document.body.innerHTML;
-  document.body.innerHTML = contents.replace(regExp, "");
+  var lastMatch = 0;
+  var replacer = function(match, offset, string) {
+    // while matching &gt;, make sure we check if there is
+    // a matching &lt; on the same line such that &lt; ... &gt;
+    var strSlice = string.slice(lastMatch, offset);
+    lastMatch = offset + weirdBlockquote.length;
+    var index = strSlice.indexOf("&lt;");
+    if (index > -1) {
+      index = strSlice.slice(index, strSlice.length).search(/\n/g);
+      return (index > -1) ? "" : match;
+    } else {
+      return "";
+    } 
+  };
+  document.body.innerHTML = contents.replace(regExp, replacer);
 }
 
 function colourEncode(topSearchElement) {
