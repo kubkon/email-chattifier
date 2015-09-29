@@ -72,26 +72,31 @@ function fromToBlocksIntoOneLiners(topSearchElement) {
   }
 }
 
-function removeBlockquotes(blockquoteElement) {
-  blockquoteElement.each(function(i, el) {
+function removeBlockquotes() {
+  // remove blockquote html elements (mainly GMail)
+  $("blockquote").each(function(i, el) {
     var contents = $(el).contents();
     contents.insertAfter($(el));
     $(el).remove();
   });
+
+  // remove &gt; which is used as the blockquote element
+  // FIX:ME this also removes right bracket in <email_address>
+  weirdBlockquote = "&gt;";
+  var regExp = new RegExp(weirdBlockquote, "g");
+  var contents = document.body.innerHTML;
+  document.body.innerHTML = contents.replace(regExp, "");
 }
 
 function colourEncode(topSearchElement) {
-  // var filterF = function(i, el) {
-  //   var regExp = new RegExp("On <date><time>, somebody wrote:", "g");
-  // };
-  // var matches = topSearchElement.find("*").filter(filterF).get().reverse();
+  // Colour encode the participants of the email exchange
 }
 
 // convert From...To... blocks into one-liners
-fromToBlocksIntoOneLiners($("body"));
+// fromToBlocksIntoOneLiners($("body"));
 
 // remove blockquotes but preserve contents
-removeBlockquotes($("blockquote"));
+removeBlockquotes();
 
 // colour encode the conversation and add horizontal separators
-colourEncode($("body"));
+// colourEncode($("body"));
