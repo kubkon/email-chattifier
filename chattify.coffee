@@ -7,20 +7,28 @@ class Parser
     # block quote characters such as ">"
     cleanIndentation: ->
         @state = 'cleanIndentation'
-        lines = @content.split /\r?\n/
-        # iterate:
+
+        # split into lines and iterate:
         # 1. trim whitespaces
         # 2. remove special quote chars such as ">"
+        lines = @content.split /\r?\n/
         cleanedLines = []
         for line in lines
             cleanedLines.push line.trim().replace(/^(?:>\s*){1,}/, "").trim()
         @content = cleanedLines.join "\n"
+
         this
 
     # convert to markdown
     toMarkdown: ->
         @state = 'toMarkdown'
-        @content = @content.replace /(On.*?wrote(:|;))/g, "\n# $1\n" 
+
+        # tag all "On...wrote:" occurrences with # symbol
+        replacer = (match, offset, string) =>
+            match = match.replace /\r?\n/g, ""
+            "\n# " + match + "\n"
+        @content = @content.replace /On[\s\S]*?wrote(:|;)/g, replacer
+        
         this
 
     # convert to html

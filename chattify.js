@@ -22,8 +22,15 @@
     };
 
     Parser.prototype.toMarkdown = function() {
+      var replacer;
       this.state = 'toMarkdown';
-      this.content = this.content.replace(/(On.*?wrote(:|;))/g, "\n# $1\n");
+      replacer = (function(_this) {
+        return function(match, offset, string) {
+          match = match.replace(/\r?\n/g, "");
+          return "\n# " + match + "\n";
+        };
+      })(this);
+      this.content = this.content.replace(/On[\s\S]*?wrote(:|;)/g, replacer);
       return this;
     };
 
