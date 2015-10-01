@@ -71,6 +71,8 @@ removeBlockquotes = () =>
         blockquotes = document.body.getElementsByTagName "blockquote"
 
 
+# creates a new stylesheet for color encoding of the
+# generated blocks, and applies some rudimentary CSS
 colorEncode = () =>
     divs = document.body.getElementsByTagName "div"
     classes = ['first', 'second']
