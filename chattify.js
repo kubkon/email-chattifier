@@ -93,11 +93,14 @@
       style = document.createElement("style");
       style.appendChild(document.createTextNode(""));
       document.head.appendChild(style);
-      colors = ['blue', 'red'];
+      style.sheet.insertRule("h1 { margin-bottom: 4px; font-size: 15px; font-family: Georgia,'Times New Roman','Bitstream Charter',Times,serif; }", 0);
+      style.sheet.insertRule("p { margin: 2px; font-size: 15px; font-family: Arial,'Bitstream Vera Sans',Helvetica,Verdana,sans-serif; }", 0);
+      style.sheet.insertRule("div { margin: 2px; }", 0);
+      colors = ['#F0F0F0', '#F9F9F9'];
       results = [];
       for (i = k = 0, len1 = classes.length; k < len1; i = ++k) {
         cl = classes[i];
-        clStyle = "." + cl + " { display: block; background: " + colors[i] + "; }";
+        clStyle = "." + cl + " { display: block; background-color: " + colors[i] + "; }";
         results.push(style.sheet.insertRule(clStyle, 0));
       }
       return results;
