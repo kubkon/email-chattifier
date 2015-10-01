@@ -11,7 +11,7 @@
     Parser.prototype.cleanIndentation = function() {
       var cleanedLines, i, len, line, lines;
       this.state = 'cleanIndentation';
-      lines = this.content.split("\n");
+      lines = this.content.split(/\r?\n/);
       cleanedLines = [];
       for (i = 0, len = lines.length; i < len; i++) {
         line = lines[i];

@@ -7,7 +7,7 @@ class Parser
     # block quote characters such as ">"
     cleanIndentation: ->
         @state = 'cleanIndentation'
-        lines = @content.split "\n"
+        lines = @content.split /\r?\n/
         # iterate:
         # 1. trim whitespaces
         # 2. remove special quote chars such as ">"
