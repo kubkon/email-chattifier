@@ -20,7 +20,7 @@ class Parser
     # convert to markdown
     toMarkdown: ->
         @state = 'toMarkdown'
-        @content = @content
+        @content = @content.replace /(On.*?wrote(:|;))/g, "\n# $1\n" 
         this
 
     # convert to html

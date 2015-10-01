@@ -23,7 +23,7 @@
 
     Parser.prototype.toMarkdown = function() {
       this.state = 'toMarkdown';
-      this.content = this.content;
+      this.content = this.content.replace(/(On.*?wrote(:|;))/g, "\n# $1\n");
       return this;
     };
 
