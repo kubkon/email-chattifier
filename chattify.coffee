@@ -92,7 +92,7 @@ colorEncode = () =>
                                 font-family: Arial,'Bitstream Vera Sans',Helvetica,Verdana,sans-serif; }", 0
     style.sheet.insertRule "div { margin: 2px; }", 0
 
-    colors = ['#F0F0F0', '#F9F9F9']
+    colors = ['#D3D3D3', '#A9A9A9']
     for cl, i in classes
         clStyle = "." + cl + " { display: block; background-color: " + colors[i] + "; }"
         style.sheet.insertRule clStyle, 0
