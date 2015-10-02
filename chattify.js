@@ -51,7 +51,7 @@
           return "\n# " + match + "\n";
         };
       })(this);
-      this.content = this.content.replace(/On[\s\S]*?wrote(:|;)/g, replacer);
+      this.content = this.content.replace(/On [\s\S]*?wrote(:|;)/g, replacer);
       return this;
     };
 

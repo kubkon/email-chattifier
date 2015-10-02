@@ -53,7 +53,7 @@ class Parser
             emailRegex = /([a-zA-Z0-9_!#$%&'*+\/=?`{|}~^.-]+@[a-zA-Z0-9.-]+)/
             match = match.replace emailRegex, "[$1](mailto:$1)"
             "\n# " + match + "\n"
-        @content = @content.replace /On[\s\S]*?wrote(:|;)/g, replacer
+        @content = @content.replace /On [\s\S]*?wrote(:|;)/g, replacer
 
         this
 
