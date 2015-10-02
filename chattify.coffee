@@ -47,6 +47,11 @@ class Parser
         # tag all "On...wrote:" occurrences with # symbol
         replacer = (match, offset, string) =>
             match = match.replace /\r?\n/g, " "
+            # remove any unwanted characters and strings
+            match = match.replace /([\[\]<>]|mailto:|javascript:;)/g, ""
+            # make email addresses into hyperlinks
+            emailRegex = /([a-zA-Z0-9_!#$%&'*+\/=?`{|}~^.-]+@[a-zA-Z0-9.-]+)/
+            match = match.replace emailRegex, "[$1](mailto:$1)"
             "\n# " + match + "\n"
         @content = @content.replace /On[\s\S]*?wrote(:|;)/g, replacer
 
@@ -145,7 +150,6 @@ parser = new Parser document.body.textContent
 document.body.innerHTML = parser.
                             cleanIndentation().
                             stripFromToBlocks().
-                            log().
                             toMarkdown().
                             toHTML().
                             content

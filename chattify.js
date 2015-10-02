@@ -43,7 +43,11 @@
       this.state = 'toMarkdown';
       replacer = (function(_this) {
         return function(match, offset, string) {
+          var emailRegex;
           match = match.replace(/\r?\n/g, " ");
+          match = match.replace(/([\[\]<>]|mailto:|javascript:;)/g, "");
+          emailRegex = /([a-zA-Z0-9_!#$%&'*+\/=?`{|}~^.-]+@[a-zA-Z0-9.-]+)/;
+          match = match.replace(emailRegex, "[$1](mailto:$1)");
           return "\n# " + match + "\n";
         };
       })(this);
@@ -148,7 +152,7 @@
 
   parser = new Parser(document.body.textContent);
 
-  document.body.innerHTML = parser.cleanIndentation().stripFromToBlocks().log().toMarkdown().toHTML().content;
+  document.body.innerHTML = parser.cleanIndentation().stripFromToBlocks().toMarkdown().toHTML().content;
 
   colorEncode();
 
