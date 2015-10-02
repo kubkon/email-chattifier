@@ -55,6 +55,18 @@ class Parser
         this
 
 
+# inserts new line characters at the end of each
+# div and span element within the email trace
+insertNewLines = () =>
+    divs = document.body.getElementsByTagName "div"
+    for div in divs
+        div.appendChild document.createTextNode "\n\n"
+
+    spans = document.body.getElementsByTagName "span"
+    for span in spans
+        span.appendChild document.createTextNode "\n\n"
+
+
 # removes all blockquote elements and substitutes them
 # for p elements
 removeBlockquotes = () =>
@@ -99,6 +111,10 @@ colorEncode = () =>
 
 
 # 1. HTML preprocessing
+# insert new lines after div and span elements
+# to account for poorly formatted web pages
+insertNewLines()
+
 # remove blockquote elements
 removeBlockquotes()
 
