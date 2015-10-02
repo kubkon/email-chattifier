@@ -41,6 +41,7 @@
     Parser.prototype.toMarkdown = function() {
       var replacer;
       this.state = 'toMarkdown';
+      this.content = this.content.replace(/(#)/g, "\\$1");
       replacer = (function(_this) {
         return function(match, offset, string) {
           var emailRegex;
