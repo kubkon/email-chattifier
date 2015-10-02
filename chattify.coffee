@@ -19,6 +19,27 @@ class Parser
 
         this
 
+    # strip From...To... blocks
+    stripFromToBlocks: ->
+        @state = 'stripFromToBlocks'
+
+        blockRegex = ///From:
+            [\s\S]*?(To|Subject|Date|Cc|Sent):
+            [\s\S]*?(To|Subject|Date|Cc|Sent):
+            [\s\S]*?(To|Subject|Date|Cc|Sent):
+            [\s\S]*?(To|Subject|Date|Cc|Sent):
+            (.*\n){1,2}
+        ///g
+
+        replacer = (match, offset, string) =>
+            match = match.replace /\r?\n/g, " "
+            from = (/From:(.*?)(To|Subject|Date|Cc|Sent):/g.exec match)[1].trim()
+            date = (/(Date|Sent):(.*?)(To|Subject|Cc):/g.exec match)[2].trim()
+            "On " + date + ", " + from + " wrote:\n\n"
+        @content = @content.replace blockRegex, replacer
+
+        this
+
     # convert to markdown
     toMarkdown: ->
         @state = 'toMarkdown'
@@ -123,11 +144,10 @@ removeBlockquotes()
 parser = new Parser document.body.textContent
 document.body.innerHTML = parser.
                             cleanIndentation().
+                            stripFromToBlocks().
                             log().
                             toMarkdown().
-                            log().
                             toHTML().
-                            log().
                             content
 
 # 3. HTML postprocessing

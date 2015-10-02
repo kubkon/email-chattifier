@@ -21,6 +21,23 @@
       return this;
     };
 
+    Parser.prototype.stripFromToBlocks = function() {
+      var blockRegex, replacer;
+      this.state = 'stripFromToBlocks';
+      blockRegex = /From:[\s\S]*?(To|Subject|Date|Cc|Sent):[\s\S]*?(To|Subject|Date|Cc|Sent):[\s\S]*?(To|Subject|Date|Cc|Sent):[\s\S]*?(To|Subject|Date|Cc|Sent):(.*\n){1,2}/g;
+      replacer = (function(_this) {
+        return function(match, offset, string) {
+          var date, from;
+          match = match.replace(/\r?\n/g, " ");
+          from = (/From:(.*?)(To|Subject|Date|Cc|Sent):/g.exec(match))[1].trim();
+          date = (/(Date|Sent):(.*?)(To|Subject|Cc):/g.exec(match))[2].trim();
+          return "On " + date + ", " + from + " wrote:\n\n";
+        };
+      })(this);
+      this.content = this.content.replace(blockRegex, replacer);
+      return this;
+    };
+
     Parser.prototype.toMarkdown = function() {
       var replacer;
       this.state = 'toMarkdown';
@@ -131,7 +148,7 @@
 
   parser = new Parser(document.body.textContent);
 
-  document.body.innerHTML = parser.cleanIndentation().log().toMarkdown().log().toHTML().log().content;
+  document.body.innerHTML = parser.cleanIndentation().stripFromToBlocks().log().toMarkdown().toHTML().content;
 
   colorEncode();
 
