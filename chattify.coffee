@@ -84,22 +84,32 @@ class Parser
         this
 
 
+# infer the ancestor (top most) node of the email conversation
+inferAncestorNode = () =>
+    # check if blockquote exist, and get their
+    # parent if they do
+    blockquotes = document.body.getElementsByTagName "blockquote"
+    if blockquotes.length > 0
+        ancestor = blockquotes[0].parentNode
+
+    if (ancestor?) then ancestor else null
+
 # inserts new line characters at the end of each
 # div and span element within the email trace
-insertNewLines = () =>
-    divs = document.body.getElementsByTagName "div"
+insertNewLines = (node) =>
+    divs = node.getElementsByTagName "div"
     for div in divs
         div.appendChild document.createTextNode "\n\n"
 
-    spans = document.body.getElementsByTagName "span"
+    spans = node.getElementsByTagName "span"
     for span in spans
         span.appendChild document.createTextNode "\n\n"
 
 
 # removes all blockquote elements and substitutes them
 # for p elements
-removeBlockquotes = () =>
-    blockquotes = document.body.getElementsByTagName "blockquote"
+removeBlockquotes = (node) =>
+    blockquotes = node.getElementsByTagName "blockquote"
 
     while blockquotes.length > 0
         bq = blockquotes[0]
@@ -109,13 +119,13 @@ removeBlockquotes = () =>
         newChild.insertAdjacentHTML 'afterbegin', bqHtml
         parent.insertBefore newChild, bq
         parent.removeChild bq
-        blockquotes = document.body.getElementsByTagName "blockquote"
+        blockquotes = node.getElementsByTagName "blockquote"
 
 
 # creates a new stylesheet for color encoding of the
 # generated blocks, and applies some rudimentary CSS
-colorEncode = () =>
-    divs = document.body.getElementsByTagName "div"
+colorEncode = (node) =>
+    divs = node.getElementsByTagName "div"
     classes = ['first', 'second']
     for div, i in divs
         div.className = classes[i % 2]
@@ -139,23 +149,27 @@ colorEncode = () =>
         style.sheet.insertRule clStyle, 0
 
 
-# 1. HTML preprocessing
-# insert new lines after div and span elements
-# to account for poorly formatted web pages
-insertNewLines()
+# get ancestor node
+ancestorNode = inferAncestorNode()
 
-# remove blockquote elements
-removeBlockquotes()
+if ancestorNode != null
+    # 1. HTML preprocessing
+    # insert new lines after div and span elements
+    # to account for poorly formatted web pages
+    insertNewLines(ancestorNode)
 
-# 2. parse into markdown followed by HTML
-# html to text
-parser = new Parser document.body.textContent
-document.body.innerHTML = parser.
-                            cleanIndentation().
-                            stripFromToBlocks().
-                            toMarkdown().
-                            toHTML().
-                            content
+    # remove blockquote elements
+    removeBlockquotes(ancestorNode)
 
-# 3. HTML postprocessing
-colorEncode()
+    # 2. parse into markdown followed by HTML
+    # html to text
+    parser = new Parser ancestorNode.textContent
+    ancestorNode.innerHTML = parser.
+                                cleanIndentation().
+                                stripFromToBlocks().
+                                toMarkdown().
+                                toHTML().
+                                content
+
+    # 3. HTML postprocessing
+    # colorEncode(ancestorNode)
