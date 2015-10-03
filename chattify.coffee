@@ -25,13 +25,15 @@ class Chattifier
             searchedEl.push el
             score = 0
             for line in el.textContent.split /\r?\n/
-                if line.match /^(?:>\s*){1,}/
+                if line.match /^(?:>\s*){2,}/
                     score += 1
 
             scores.push score
 
         maxEl = Math.max.apply null, scores
-        @ancestorNode = searchedEl[scores.indexOf maxEl].parentNode
+        if maxEl > 0
+          @ancestorNode = searchedEl[scores.indexOf maxEl].parentNode
+        
         this
 
     # preprocesses the existing HTML of the ancestor node

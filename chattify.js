@@ -28,14 +28,16 @@
         ref1 = el.textContent.split(/\r?\n/);
         for (k = 0, len1 = ref1.length; k < len1; k++) {
           line = ref1[k];
-          if (line.match(/^(?:>\s*){1,}/)) {
+          if (line.match(/^(?:>\s*){2,}/)) {
             score += 1;
           }
         }
         scores.push(score);
       }
       maxEl = Math.max.apply(null, scores);
-      this.ancestorNode = searchedEl[scores.indexOf(maxEl)].parentNode;
+      if (maxEl > 0) {
+        this.ancestorNode = searchedEl[scores.indexOf(maxEl)].parentNode;
+      }
       return this;
     };
 
