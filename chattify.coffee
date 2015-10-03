@@ -13,7 +13,25 @@ class Chattifier
         blockquotes = document.body.getElementsByTagName "blockquote"
         if blockquotes.length > 0
             @ancestorNode = blockquotes[0].parentNode
+            return this
 
+        # don't give up just yet; check for special indendation
+        # characters such as ">" and get the parentNode of their
+        # element
+        allElements = Array.prototype.slice.call document.body.getElementsByTagName "*"
+        searchedEl = []
+        scores = []
+        for el in allElements.reverse()
+            searchedEl.push el
+            score = 0
+            for line in el.textContent.split /\r?\n/
+                if line.match /^(?:>\s*){1,}/
+                    score += 1
+
+            scores.push score
+
+        maxEl = Math.max.apply null, scores
+        @ancestorNode = searchedEl[scores.indexOf maxEl].parentNode
         this
 
     # preprocesses the existing HTML of the ancestor node

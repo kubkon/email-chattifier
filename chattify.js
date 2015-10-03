@@ -10,12 +10,32 @@
     }
 
     Chattifier.prototype.inferAncestorNode = function() {
-      var blockquotes;
+      var allElements, blockquotes, el, j, k, len, len1, line, maxEl, ref, ref1, score, scores, searchedEl;
       this.state = 'inferAncestorNode';
       blockquotes = document.body.getElementsByTagName("blockquote");
       if (blockquotes.length > 0) {
         this.ancestorNode = blockquotes[0].parentNode;
+        return this;
       }
+      allElements = Array.prototype.slice.call(document.body.getElementsByTagName("*"));
+      searchedEl = [];
+      scores = [];
+      ref = allElements.reverse();
+      for (j = 0, len = ref.length; j < len; j++) {
+        el = ref[j];
+        searchedEl.push(el);
+        score = 0;
+        ref1 = el.textContent.split(/\r?\n/);
+        for (k = 0, len1 = ref1.length; k < len1; k++) {
+          line = ref1[k];
+          if (line.match(/^(?:>\s*){1,}/)) {
+            score += 1;
+          }
+        }
+        scores.push(score);
+      }
+      maxEl = Math.max.apply(null, scores);
+      this.ancestorNode = searchedEl[scores.indexOf(maxEl)].parentNode;
       return this;
     };
 
