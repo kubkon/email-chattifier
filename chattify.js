@@ -132,7 +132,7 @@
     Chattifier.prototype._log = function() {
       var ancestorNode, msg, state, textContent;
       state = "state: " + this.state;
-      ancestorNode = "ancestorNode: " + this.ancestorNode;
+      ancestorNode = "ancestorNode: " + this.ancestorNode.tagName;
       textContent = "textContent: " + this.textContent;
       msg = "{ " + ([state, ancestorNode, textContent].join("\n")) + " }";
       console.log(msg);

@@ -137,7 +137,7 @@ class Chattifier
     # for debugging only
     _log: ->
         state = "state: " + @state
-        ancestorNode = "ancestorNode: " + @ancestorNode
+        ancestorNode = "ancestorNode: " + @ancestorNode.tagName
         textContent  = "textContent: " + @textContent
         msg = "{ " + ([state, ancestorNode, textContent].join "\n") + " }"
         console.log msg
