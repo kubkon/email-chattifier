@@ -138,8 +138,8 @@ Chattifier = (function() {
         if (line.match(/^(?:>\s*){2,}/)) {
           score += 1;
         }
-        scores.push(score);
       }
+      scores.push(score);
     }
     maxEl = Math.max.apply(null, scores);
     if (maxEl > 0) {
