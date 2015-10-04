@@ -190,7 +190,7 @@ class Chattifier
                                 font-size: 15px;
                                 font-family: Arial,'Bitstream Vera Sans',Helvetica,Verdana,sans-serif; }", 0
 
-        colors = ['#D3D3D3', '#A9A9A9']
+        colors = ['#FFF', '#F4F4F4']
         for cl, i in classes
             clStyle = "." + cl + " { background-color: " + colors[i] + "; }"
             style.sheet.insertRule clStyle, 0

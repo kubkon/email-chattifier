@@ -186,7 +186,7 @@
       style.sheet.insertRule("div.chattifier { margin: 2px; display: block; }", 0);
       style.sheet.insertRule("div.chattifier > h1 { margin-bottom: 4px; font-size: 15px; font-family: Georgia,'Times New Roman','Bitstream Charter',Times,serif; }", 0);
       style.sheet.insertRule("div.chattifier > p { margin: 2px; font-size: 15px; font-family: Arial,'Bitstream Vera Sans',Helvetica,Verdana,sans-serif; }", 0);
-      colors = ['#D3D3D3', '#A9A9A9'];
+      colors = ['#FFF', '#F4F4F4'];
       results = [];
       for (i = k = 0, len1 = classes.length; k < len1; i = ++k) {
         cl = classes[i];
