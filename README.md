@@ -6,12 +6,30 @@ Chattify-email is a work-in-progress, simple Google Chrome extension that serves
 + remove any blockquote elements
 + convert "From:...To:..."" blocks into a one-liner "On this date that person wrote:"
 
-# Requirements
-In order to compile the extension, you need to install the following packages:
-+ coffeescript
-+ markdown
-+ browserify
-+ jasmine-node
+# Prerequisites
+The extension was written using Coffee Script. You can get a copy using the following command:
+
+```
+$ npm install -g coffee-script
+```
+
+Furthermore, since the app is meant to run in the browser, and since it features nodejs style `require` calls to resolve dependencies, you will need to install `browserify`:
+
+```
+$ npm install -g browserify
+```
+
+If you want to run unit tests, you need `jasmine-node`. You can obtain it using the following command:
+
+```
+$ npm install -g jasmine-node
+```
+
+Finally, to install the libraries the app depends on, simply run:
+
+```
+$ npm install
+```
 
 # Compiling
 Firstly, compile all coffee scripts in the `src/` folder into the `dist/` folder; that is:

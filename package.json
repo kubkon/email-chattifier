@@ -1,0 +1,13 @@
+{
+  "name": "chattifier",
+  "description": "Email chattifier",
+  "homepage": "https://github.com/kubkon/chattify-email",
+  "author": "Jakub Konka <kubkon@jakubkonka.com>",
+  "contributors": ["Chris Davison <c.jr.davison@gmail.com>"],
+  "dependencies": {
+    "markdown": ">=0.5.0"
+  },
+  "repository": {"type": "git", "url": "git://github.com/kubkon/chattify-email.git"},
+  "main": "dist/bundle.js",
+  "version": "0.0.1"
+}
