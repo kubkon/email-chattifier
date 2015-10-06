@@ -55,8 +55,7 @@ class Parser
       # remove any unwanted characters and strings
       match = match.replace /([\[\]<>]|mailto:|javascript:;)/g, ""
       # make email addresses into hyperlinks
-      emailRegex = /([a-zA-Z0-9_!#$%&'*+\/=?`{|}~^.-]+@[a-zA-Z0-9.-]+)/
-      match = match.replace emailRegex, "[$1](mailto:$1)"
+      match = @emailToHyperlink(match)
       "\n# " + match + "\n"
 
     @content = @content.replace /On [\s\S]*?wrote(:|;)/g, replacer
@@ -88,6 +87,10 @@ class Parser
     msg = "{ " + ([state, content].join "\n") + " }"
     console.log msg
     this
+
+  emailToHyperlink: (str) ->
+    emailRegex = /([a-zA-Z0-9_!#$%&'*+\/=?`{|}~^.-]+@[a-zA-Z0-9.-]+)/
+    str.replace emailRegex, "[$1](mailto:$1)"
 
 
 module.exports = Parser
