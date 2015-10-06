@@ -26,7 +26,7 @@ class Parser
     @content = @content.replace /(#)/g, "\\$1"
 
     # tag all "On...wrote:" occurrences with # symbol
-    replacer = (match, offset, string) =>
+    replacer = (match) =>
       match = match.replace /\r?\n/g, " "
       # remove any unwanted characters and strings
       match = match.replace /([\[\]<>]|mailto:|javascript:;)/g, ""
@@ -81,7 +81,7 @@ class Parser
       (.*\n){1,2}
     ///g
 
-    replacer = (match, offset, string) =>
+    replacer = (match) =>
       match = match.replace /\r?\n/g, " "
       from = (/From:(.*?)(To|Subject|Date|Cc|Sent):/g.exec match)[1].trim()
       date = (/(Date|Sent):(.*?)(To|Subject|Cc):/g.exec match)[2].trim()
