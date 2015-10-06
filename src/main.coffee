@@ -17,13 +17,9 @@ class Chattifier
     @insertNewLinesIntoDivsAndSpans()
     @removeBlockquotes()
       
-    # parse the text content
+    # parse the text content into Markdown
     @parser = new Parser @ancestorNode.textContent
-    @parser.
-      cleanIndentation().
-      stripFromToBlocks().
-      toMarkdown().
-      toHTML()
+    @parser.toMarkdown().toHTML()
 
     # postprocess HTML
     @ancestorNode.innerHTML = @parser.content
