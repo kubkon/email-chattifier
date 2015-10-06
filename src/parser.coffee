@@ -16,7 +16,7 @@ class Parser
     lines = @content.split /\r?\n/
     cleanedLines = []
     for line in lines
-      cleanedLines.push line.trim().replace(/^(?:>\s*){1,}/, "").trim()
+      cleanedLines.push @removeSpecialChars(line.trim()).trim()
 
     @content = cleanedLines.join "\n"
     this
@@ -91,6 +91,10 @@ class Parser
   emailToHyperlink: (str) ->
     emailRegex = /([a-zA-Z0-9_!#$%&'*+\/=?`{|}~^.-]+@[a-zA-Z0-9.-]+)/
     str.replace emailRegex, "[$1](mailto:$1)"
+
+  removeSpecialChars: (str) ->
+    regex = /^(?:>\s*){1,}/
+    str.replace regex, ""
 
 
 module.exports = Parser

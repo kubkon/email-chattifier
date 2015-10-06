@@ -17,3 +17,26 @@ describe "Test Parser class", ->
     expect(parser.emailToHyperlink "John Doe john-doe@abc.com wrote").
       toBe "John Doe [john-doe@abc.com](mailto:john-doe@abc.com) wrote"
 
+  it "tests removing special chars", ->
+    parser = new Parser ""
+    expect(parser.removeSpecialChars ">").
+      toBe ""
+
+    expect(parser.removeSpecialChars ">>").
+      toBe ""
+
+    expect(parser.removeSpecialChars "> >").
+      toBe ""
+
+    expect(parser.removeSpecialChars "> >>").
+      toBe ""
+
+    expect(parser.removeSpecialChars ">> >").
+      toBe ""
+
+    expect(parser.removeSpecialChars ">>>").
+      toBe ""
+
+    expect(parser.removeSpecialChars " >").
+      toBe " >"
+
