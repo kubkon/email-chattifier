@@ -4,15 +4,21 @@
   "description":
     "Re-formats your GMail conversation into something more readable, like a chat archive",
   "permissions": [
-    "tabs",
-    "https://mail.google.com/*"
+    "tabs"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://mail.google.com/*"],
+      "js": ["bundle.js"]
+    }
   ],
   "background": {
     "scripts": ["background.js"],
     "persistent": false
   },
   "page_action": {
-    "default_title": "GMail Chattifier"
+    "default_title": "GMail Chattifier",
+    "default_popup": "popup.html"
   },
   "manifest_version": 2
 }

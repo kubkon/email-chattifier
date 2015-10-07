@@ -4,6 +4,3 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   }
 });
 
-chrome.pageAction.onClicked.addListener(function(_) {
-  chrome.tabs.executeScript(null, { file: "bundle.js" });
-});

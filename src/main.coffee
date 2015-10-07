@@ -107,7 +107,9 @@ class Chattifier
       style.sheet.insertRule clStyle, 0
 
 
-# run!
-chattifier = new Chattifier()
-chattifier.renderHTML()
+chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
+  if request.chattify
+    # run!
+    chattifier = new Chattifier()
+    chattifier.renderHTML()
 
