@@ -87,17 +87,26 @@ class Parser
     str.replace regex, ""
 
   matchFromToBlocks: (str) ->
-    mainRegex = /From:\s+/g
+    mainRegex = /From:\s*?/g
     indices = []
     temp = str
     while (match = mainRegex.exec temp)
       begin = match.index
-      end = begin + match[0].length
+      end = begin + match[0].length + 1
+      console.log end
       indices.push begin
       temp = temp[end..]
 
-    for i in indices
-      console.log i
+    begin = indices[0]
+    for i in indices[1..]
+      if not i
+        break
+      end = i
+      console.log "{ " + str[begin..end] + " }\n"
+      begin = end
+
+    end = str.length
+    console.log "{ " + str[begin..end] + " }\n\n\n"
 
     # otherTags = ["To:", "Date:", "Subject:", "Sent:", "Cc:"]
     # regex = new RegExp mainTag + "\\s+"
