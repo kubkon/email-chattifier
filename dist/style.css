@@ -23,3 +23,7 @@ div.container button {
   font-size: 12px;
   float: right;
 }
+
+#status {
+  font-weight: bold;
+}
