@@ -51,18 +51,18 @@ describe "Test Parser class", ->
       toEqual [text]
 
     text1 = "From: a@b.com\nTo: b@c.com\nSubject: Something\nDate: 01/01/2015\n ...\n\n "
-    text2 = "From:b@c.com"
+    text2 = "From:b@c.com\nTo: d@e.com\n"
     expect(parser.splitByFromTag text1 + text2).
       toEqual [text1, text2]
 
-    text1 = "From: a@b.com\n\n"
+    text1 = "From: a@b.com\nSent: 01/01/2015\n"
     text2 = "From: b@c.com\nTo: a@b.com\nSubject: Something\nDate: 01/01/2015\n"
     expect(parser.splitByFromTag text1 + text2).
       toEqual [text1, text2]
 
     text1 = " ...\n\n ..."
     text2 = "From: a@b.com\nTo: b@c.com\nSubject: Something\nDate: 01/01/2015\n...\n\n"
-    text3 = "From:b@c.com"
+    text3 = "From:b@c.com\nTo:z@z.co.uk"
     expect(parser.splitByFromTag text1 + text2 + text3).
       toEqual [text1, text2, text3]
 

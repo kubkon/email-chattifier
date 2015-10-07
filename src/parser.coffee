@@ -74,7 +74,7 @@ class Parser
     str.replace regex, ""
 
   splitByFromTag: (str) ->
-    mainRegex = /From:\s*?/g
+    mainRegex = /From:[\s\S]*?(To|Subject|Date|Cc|Sent):/g
     substrings = []
     matchIndices = (match.index while match = mainRegex.exec str)
 
