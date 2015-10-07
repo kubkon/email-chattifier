@@ -1,0 +1,25 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-size: 12px;
+  font-family: Arial,'Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
+  overflow-x: hidden;
+}
+
+.container {
+  width: 200px;
+  padding: 10px 20px;
+}
+
+div.container p, button {
+  margin: 10px;
+}
+
+div.container button {
+  padding: 3px 3px;
+  font-size: 12px;
+  float: right;
+}

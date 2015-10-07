@@ -11,7 +11,7 @@ class Chattifier
     @inferAncestorNode()
 
     if not @ancestorNode?
-      return
+      return false
 
     # preprocess HTML
     @insertNewLinesIntoDivsAndSpans()
@@ -24,6 +24,8 @@ class Chattifier
     # postprocess HTML
     @ancestorNode.innerHTML = @parser.content
     @colorEncode()
+
+    return true
       
   # infers the ancestor (top most) node of the email conversation
   inferAncestorNode: ->
@@ -111,5 +113,6 @@ chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
   if request.chattify
     # run!
     chattifier = new Chattifier()
-    chattifier.renderHTML()
+    status = chattifier.renderHTML()
+    sendResponse { status: status }
 

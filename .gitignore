@@ -2,6 +2,8 @@
 *~
 *swp
 node_modules/
-dist/
+dist/*
+!dist/style.css
 !dist/background.js
 !dist/manifest.json
+!dist/popup.html
