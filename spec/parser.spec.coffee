@@ -76,6 +76,14 @@ describe "Test Parser class", ->
     expect(parser.replaceFromToBlocks text).
       toEqual "On 01/01/2015, a@b.com wrote:\n\n"
 
+    text = "From: a@b.com\nTo: b@c.com\nDate: 01/01/2015\nSubject: Something\nHi there,"
+    expect(parser.replaceFromToBlocks text).
+      toEqual "On 01/01/2015, a@b.com wrote:\n\nHi there,"
+
+    text = "From: a@b.com\nTo: b@c.com\nSubject: Something\nDate: 01/01/2015\n Hi there,"
+    expect(parser.replaceFromToBlocks text).
+      toEqual "On 01/01/2015, a@b.com wrote:\n\n Hi there,"
+
     text = "From: a@b.com\nTo: b@c.com\nSubject: Something\nDate: 01/01/2015\nCc: c@d.com\n"
     expect(parser.replaceFromToBlocks text).
       toEqual "On 01/01/2015, a@b.com wrote:\n\n"
