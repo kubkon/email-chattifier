@@ -1,10 +1,15 @@
 chattify-email
 ===
 
-Chattify-email is a work-in-progress, simple Google Chrome extension that serves one simple purpose: to re-format your email exchange into something more readable, more like a chat archive. It is meant to perform the following 3 fundamental functions:
-+ strip email signatures
+Chattify-email is a work-in-progress, simple Google Chrome extension that serves one simple purpose: to re-format your email exchange into something more readable, more like a chat archive.
+
+Currently, it performs the following 2 fundamental functions:
 + remove any blockquote elements
-+ convert "From:...To:..."" blocks into a one-liner "On this date that person wrote:"
++ convert "From:...To:..."" blocks into a one-liner "On...wrote:"
++ separates "On...wrote:" blocks into alternately coloured paragraph blocks
+
+In the future, it is also meant to provide the following functionality:
++ strip email signatures
 
 # Prerequisites
 The extension was written using Coffee Script. You can get a copy using the following command:
