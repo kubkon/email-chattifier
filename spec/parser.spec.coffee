@@ -65,3 +65,25 @@ describe "Test Parser class", ->
     text3 = "From:b@c.com"
     expect(parser.splitByFromTag text1 + text2 + text3).
       toEqual [text1, text2, text3]
+
+  it "tests replacing From..To.. string into 'On...wrote:'", ->
+    parser = new Parser ""
+    text = "From: a@b.com\nTo: b@c.com\nDate: 01/01/2015\nSubject: Something\n"
+    expect(parser.replaceFromToBlocks text).
+      toEqual "On 01/01/2015, a@b.com wrote:\n\n"
+
+    text = "From: a@b.com\nTo: b@c.com\nSubject: Something\nDate: 01/01/2015\n"
+    expect(parser.replaceFromToBlocks text).
+      toEqual "On 01/01/2015, a@b.com wrote:\n\n"
+
+    text = "From: a@b.com\nTo: b@c.com\nSubject: Something\nDate: 01/01/2015\nCc: c@d.com\n"
+    expect(parser.replaceFromToBlocks text).
+      toEqual "On 01/01/2015, a@b.com wrote:\n\n"
+
+    text = "From: a@b.com\nTo: b@c.com\nSubject: Something\nDate: 01/01/2015\nCc: c@d.com\n\n Hi there,"
+    expect(parser.replaceFromToBlocks text).
+      toEqual "On 01/01/2015, a@b.com wrote:\n\n\n Hi there,"
+
+    text = "From: a@b.com\nTo: b@c.com\nSubject: Something\nDate: 01/01/2015\nCc: c@d.com\n Hi there,\n"
+    expect(parser.replaceFromToBlocks text).
+      toEqual "On 01/01/2015, a@b.com wrote:\n\n Hi there,\n"

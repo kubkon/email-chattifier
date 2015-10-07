@@ -91,20 +91,17 @@ class Parser
     return substrings
 
   replaceFromToBlocks: (str) ->
-    blockRegex = /From:[\s\S]*?(To|Subject|Date|Cc|Sent:[\s\S]*?){3,4}(.*\n){1,2}/
+    blockRegex = /From:([\s\S]*?(To|Subject|Date|Cc|Sent):){3,}.*\n/
 
     replacer = (match) =>
       match = match.replace /\r?\n/g, " "
       from = (/From:(.*?)(To|Subject|Date|Cc|Sent):/.exec match)[1].trim()
-      date = (/(Date|Sent):(.*?)(To|Subject|Cc):/.exec match)[2].trim()
+      dateMatch = /(Date|Sent):(.*?)(To|Subject|Cc):/.exec match
+      dateMatch ?= /(Date|Sent):(.*)/.exec match
+      date = dateMatch[2].trim()
       "On " + date + ", " + from + " wrote:\n\n"
 
-    converted = []
-    for block in blocks
-      converted.push block.replace blockRegex, replacer
-    console.log converted
-
-    str
+    str.replace blockRegex, replacer
 
 
 module.exports = Parser
