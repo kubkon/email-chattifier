@@ -3,7 +3,7 @@ chattify-email
 
 Chattify-email is a work-in-progress, simple Google Chrome extension that serves one simple purpose: to re-format your email exchange into something more readable, more like a chat archive.
 
-Currently, it performs the following 2 fundamental functions:
+Currently, it performs the following 3 fundamental functions:
 + remove any blockquote elements
 + convert "From:...To:..."" blocks into a one-liner "On...wrote:"
 + separates "On...wrote:" blocks into alternately coloured paragraph blocks
