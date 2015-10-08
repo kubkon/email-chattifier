@@ -8,6 +8,6 @@
   },
   "repository": {"type": "git", "url": "git://github.com/kubkon/email-chattifier.git"},
   "main": "dist/bundle.js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "SEE LICENSE IN License.md"
 }
