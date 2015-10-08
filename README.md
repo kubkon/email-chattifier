@@ -1,7 +1,9 @@
 Email Chattifier
 ===
 
-Email Chattifier is a simple Google Chrome extension that serves one simple purpose: to re-format your email conversation into something more readable, like a chat archive. Currently, it only supports GMail web client, and performs the following 3 fundamental functions:
+Email Chattifier is a simple Google Chrome extension that serves one simple purpose: to re-format your email conversation into something more readable, like a chat archive. You can download and install it in your Chrome browser following this link: [chrome.google.com](https://chrome.google.com/webstore/detail/email-chattifier/pcjnciejhladedpdmiokgpeanfejiofa).
+
+Currently, it only supports GMail web client, and performs the following 3 fundamental functions:
 + remove any blockquote elements
 + convert "From:...To:..."" blocks into a one-liner "On...wrote:"
 + separates "On...wrote:" blocks into alternately coloured paragraph blocks
