@@ -2,8 +2,15 @@
 *~
 *swp
 node_modules/
+
+!dist/
 dist/*
+
 !dist/style.css
 !dist/manifest.json
 !dist/popup.html
-!dist/gmail-chattifier-*.png
+
+!dist/assets/
+dist/assets/*
+
+!dist/assets/icon-*.png
