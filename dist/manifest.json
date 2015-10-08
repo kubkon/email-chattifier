@@ -1,12 +1,12 @@
 {
-  "name": "GMail Chattifier",
+  "name": "Email Chattifier",
   "version": "0.0.1",
   "description":
-    "Re-formats your GMail conversation into something more readable, like a chat archive",
+    "Re-formats your email conversation into something more readable, like a chat archive",
   "icons": {
-    "16": "gmail-chattifier-16.png",
-    "48": "gmail-chattifier-48.png",
-    "128": "gmail-chattifier-128.png"
+    "16": "assets/icon-16.png",
+    "48": "assets/icon-48.png",
+    "128": "assets/icon-128.png"
   },
   "permissions": [
     "tabs"
@@ -22,9 +22,9 @@
     "persistent": false
   },
   "page_action": {
-    "default_title": "GMail Chattifier",
+    "default_title": "Email Chattifier",
     "default_popup": "popup.html",
-    "default_icon": "gmail-chattifier-128.png"
+    "default_icon": "assets/icon-128.png"
   },
   "manifest_version": 2
 }

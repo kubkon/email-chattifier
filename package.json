@@ -1,12 +1,12 @@
 {
-  "name": "gmail-chattifier",
-  "description": "GMail Chattifier",
-  "homepage": "https://github.com/kubkon/gmail-chattifier",
+  "name": "email-chattifier",
+  "description": "Email Chattifier",
+  "homepage": "https://github.com/kubkon/email-chattifier",
   "author": "Jakub Konka <kubkon@jakubkonka.com>",
   "dependencies": {
     "markdown": ">=0.5.0"
   },
-  "repository": {"type": "git", "url": "git://github.com/kubkon/gmail-chattifier.git"},
+  "repository": {"type": "git", "url": "git://github.com/kubkon/email-chattifier.git"},
   "main": "dist/bundle.js",
   "version": "0.0.1",
   "license": "SEE LICENSE IN License.md"

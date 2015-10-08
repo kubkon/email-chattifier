@@ -1,9 +1,7 @@
-GMail Chattifier
+Email Chattifier
 ===
 
-GMail Chattifier is a simple Google Chrome extension that serves one simple purpose: to re-format your GMail email conversation into something more readable, like a chat archive.
-
-Currently, it performs the following 3 fundamental functions:
+Email Chattifier is a simple Google Chrome extension that serves one simple purpose: to re-format your email conversation into something more readable, like a chat archive. Currently, it only supports GMail web client, and performs the following 3 fundamental functions:
 + remove any blockquote elements
 + convert "From:...To:..."" blocks into a one-liner "On...wrote:"
 + separates "On...wrote:" blocks into alternately coloured paragraph blocks
@@ -63,4 +61,4 @@ $ jasmine-node --coffee spec
 If you have discovered a bug, or would like to discuss its current and future functionality, feel free to submit a Github issue, and assign it to me.
 
 # License
-MIT licenses, see [License.md](License.md).
+MIT license, see [License.md](License.md).
