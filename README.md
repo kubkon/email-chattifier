@@ -12,7 +12,8 @@ In the future, it is also meant to provide the following functionality:
 + strip email signatures
 + support other web email clients (iCloud, Outlook, etc.)
 
-# Prerequisites
+# Development
+## Prerequisites
 The extension was written using Coffee Script. You can get a copy using the following command:
 
 ```
@@ -37,7 +38,7 @@ Finally, to install the libraries the app depends on, simply run:
 $ npm install
 ```
 
-# Compiling
+## Compiling
 Firstly, compile all coffee scripts in the `src/` folder into the `dist/` folder; that is:
 
 ```
@@ -52,14 +53,14 @@ $ browserify dist/main.js > dist/bundle.js
 
 And that's you done. Now you can upload the folder `dist` to Google Chrome.
 
-# Testing
+## Testing
 The code can be tested running `jasmine` test engine. This can be accomplished as follows:
 
 ```
 $ jasmine-node --coffee spec
 ```
 
-# Found a bug?
+## Found a bug?
 If you have discovered a bug, or would like to discuss its current and future functionality, feel free to submit a Github issue, and assign it to me.
 
 # License
