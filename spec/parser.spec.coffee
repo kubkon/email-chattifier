@@ -95,3 +95,26 @@ describe "Test Parser class", ->
     text = "From: a@b.com\nTo: b@c.com\nSubject: Something\nDate: 01/01/2015\nCc: c@d.com\n Hi there,\n"
     expect(parser.replaceFromToBlocks text).
       toEqual "On 01/01/2015, a@b.com wrote:\n\n Hi there,\n"
+
+  it "tests removing 'forwarded message' headers", ->
+    parser = new Parser ""
+    text = "------ Forwarded message: ------\n"
+    expect(parser.removeForwardedMsgHeaders text).
+      toEqual "\n"
+
+    text = " ------ Forwarded message: ------\n"
+    expect(parser.removeForwardedMsgHeaders text).
+      toEqual " \n"
+
+    text = "------ Forwarded message: ------ "
+    expect(parser.removeForwardedMsgHeaders text).
+      toEqual " "
+
+    text = "------ Forwarded message: ------\n"
+    expect(parser.removeForwardedMsgHeaders text).
+      toEqual "\n"
+
+    text = "- Forwarded message: --\n"
+    expect(parser.removeForwardedMsgHeaders text).
+      toEqual "\n"
+

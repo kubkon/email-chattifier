@@ -103,6 +103,11 @@ class Parser
 
     str.replace blockRegex, replacer
 
+  removeForwardedMsgHeaders: (str) ->
+    regex = /-+ Forwarded message: -+([\s\n]+)/g
+
+    str.replace regex, "$1"
+
 
 module.exports = Parser
 
