@@ -98,23 +98,23 @@ describe "Test Parser class", ->
 
   it "tests removing 'forwarded message' headers", ->
     parser = new Parser ""
-    text = "------ Forwarded message: ------\n"
+    text = "------ Forwarded message ------\n"
     expect(parser.removeForwardedMsgHeaders text).
       toEqual "\n"
 
-    text = " ------ Forwarded message: ------\n"
+    text = " ------ Forwarded message ------\n"
     expect(parser.removeForwardedMsgHeaders text).
       toEqual " \n"
 
-    text = "------ Forwarded message: ------ "
+    text = "------ Forwarded message ------ "
     expect(parser.removeForwardedMsgHeaders text).
       toEqual " "
 
-    text = "------ Forwarded message: ------\n"
+    text = "------ Forwarded message ------\n"
     expect(parser.removeForwardedMsgHeaders text).
       toEqual "\n"
 
-    text = "- Forwarded message: --\n"
+    text = "- Forwarded message --\n"
     expect(parser.removeForwardedMsgHeaders text).
       toEqual "\n"
 

@@ -19,6 +19,9 @@ class Parser
 
     @content = cleanedLines.join "\n"
 
+    # remove "forwarded message"-type headers
+    @content = @removeForwardedMsgHeaders @content
+
     # convert From...To... blocks into "On...wrote:"
     blocks = @splitByFromTag @content
     @content = (@replaceFromToBlocks b for b in blocks).join "\n"
@@ -104,7 +107,7 @@ class Parser
     str.replace blockRegex, replacer
 
   removeForwardedMsgHeaders: (str) ->
-    regex = /(-+ Forwarded message: -+|Begin forwarded message:)([\s\n]+)/g
+    regex = /(-+ Forwarded message -+|Begin forwarded message:)([\s\n]+)/g
 
     str.replace regex, "$2"
 
