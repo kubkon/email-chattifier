@@ -118,3 +118,15 @@ describe "Test Parser class", ->
     expect(parser.removeForwardedMsgHeaders text).
       toEqual "\n"
 
+    text = "Begin forwarded message:\n"
+    expect(parser.removeForwardedMsgHeaders text).
+      toEqual "\n"
+
+    text = " Begin forwarded message:\n"
+    expect(parser.removeForwardedMsgHeaders text).
+      toEqual " \n"
+      
+    text = " Begin forwarded message: \n"
+    expect(parser.removeForwardedMsgHeaders text).
+      toEqual "  \n"
+

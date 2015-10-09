@@ -104,9 +104,9 @@ class Parser
     str.replace blockRegex, replacer
 
   removeForwardedMsgHeaders: (str) ->
-    regex = /-+ Forwarded message: -+([\s\n]+)/g
+    regex = /(-+ Forwarded message: -+|Begin forwarded message:)([\s\n]+)/g
 
-    str.replace regex, "$1"
+    str.replace regex, "$2"
 
 
 module.exports = Parser
