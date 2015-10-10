@@ -192,3 +192,7 @@ describe "Test Parser class", ->
     expect(parser.matchSignature text).
       toBe true
 
+    text = "Alrighty!Sent from my iPhone"
+    expect(parser.matchSignature text).
+      toBe true
+

@@ -44,9 +44,19 @@ class Parser
         count += 1
         ignore = false
 
+      # ignore everything below "hr" elements
+      if el[0] == "hr"
+        ignore = true
+
+      # match email signatures
       if el[0] == "p" and typeof el[1] == "string"
         if @matchSignature el[1]
           ignore = true
+          # check for "Sent from my iPhone" confused signature
+          regex = /Sent from my iPhone/
+          if regex.test el[1]
+            el[1] = el[1].replace regex, ""
+            outputTree[count].push el
 
       if not ignore
         console.log el
@@ -56,9 +66,10 @@ class Parser
     markdown.renderJsonML outputTree
 
   matchSignature: (str) ->
-    regex = /// ^ (
-      (-){2,}?[\s\w]*|
-      Sent\ from(\n| )
+    regex = /// (
+      ^(-){2,}?[\s\w]*|
+      ^Sent\ from(\n| )|
+      Sent\ from\ my\ iPhone
     ) ///
 
     regex.test str
