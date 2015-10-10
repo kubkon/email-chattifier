@@ -7,10 +7,9 @@ Currently, it only supports GMail web client, and performs the following 3 funda
 + remove any blockquote elements
 + convert "From:...To:..." blocks into a one-liner "On...wrote:"
 + separates "On...wrote:" blocks into alternately coloured paragraph blocks
++ strips certain email signatures
 
-In the future, it is also meant to provide the following functionality:
-+ strip email signatures
-+ support other web email clients (iCloud, Outlook, etc.)
+In the future, it is also meant to support other web email clients such as iCloud, Outlook, etc.
 
 # Development
 ## Prerequisites
