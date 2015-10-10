@@ -1,6 +1,6 @@
 {
   "name": "Email Chattifier",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description":
     "Re-formats your email conversation into something more readable, like a chat archive",
   "icons": {
