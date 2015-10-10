@@ -102,10 +102,10 @@ class Parser
   # from a string
   stripEmailSignatures: (str) ->
     regex = /// (
-      (-){2,}?[\s\w]*|
+      ^(-){2,}?[\s\w]*|
       Sent\ from(\n| )|
       Sent\ from\ my\ iPhone
-    ) ///g
+    ) ///mg
     
     index = str.search regex
     if index > -1

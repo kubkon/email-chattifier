@@ -180,19 +180,19 @@ describe "Test Parser class", ->
       },
       {
         input: "Hi there,\nHow are you?\n Best,\n John-- JD\nCEO & CEO\n\n",
-        expected: "Hi there,\nHow are you?\n Best,\n John"
+        expected: "Hi there,\nHow are you?\n Best,\n John-- JD\nCEO & CEO\n\n"
       },
       {
-        input: "Hi there,\nHow are you?\n Best,\n John -- JD\nCEO & CEO\n\n",
-        expected: "Hi there,\nHow are you?\n Best,\n John "
+        input: "Hi there,\nHow are you?\n Best,\n John \n-- JD\nCEO & CEO\n\n",
+        expected: "Hi there,\nHow are you?\n Best,\n John \n"
       },
       {
-        input: "Hi there,\nHow are you?\n Best,\n John--JD\nCEO & CEO\n\n",
-        expected: "Hi there,\nHow are you?\n Best,\n John"
+        input: "Hi there,\nHow are you?\n Best,\n John\n--\nJD\nCEO & CEO\n\n",
+        expected: "Hi there,\nHow are you?\n Best,\n John\n"
       },
       {
         input: "Hi there,\nHow are you?\n Best,\n John--\nJD\nCEO & CEO\n\n",
-        expected: "Hi there,\nHow are you?\n Best,\n John"
+        expected: "Hi there,\nHow are you?\n Best,\n John--\nJD\nCEO & CEO\n\n"
       },
       {
         input: "Hi there,\nHow are you?\n Best,\n John\nSent from my iPhone\n--\nJD\nCEO & CEO\n\n",
@@ -217,6 +217,10 @@ describe "Test Parser class", ->
       {
         input: "Hi there,\nHow are you?\n Best,\n -JohnSent from Outlook\n--\nJD\nCEO & CEO\n\n",
         expected: "Hi there,\nHow are you?\n Best,\n -John"
+      },
+      {
+        input: "well, right -- this is just how it is.",
+        expected: "well, right -- this is just how it is."
       }
     ]
     for t in testData
