@@ -3,7 +3,6 @@ Parser = require "./Parser.js"
 class Chattifier
   constructor: ->
     @ancestorNode = null
-    @parser       = null
 
   # rerender the email conversation
   renderHTML: ->
@@ -19,11 +18,11 @@ class Chattifier
     @removeBlockquotes()
       
     # parse the text content into Markdown
-    @parser = new Parser @ancestorNode.textContent
-    @parser.toMarkdown().toHTML()
+    parser = new Parser @ancestorNode.textContent
+    parser.parse()
+    @ancestorNode.innerHTML = parser.toHTML()
 
     # postprocess HTML
-    @ancestorNode.innerHTML = @parser.content
     @colorEncode()
 
     return true

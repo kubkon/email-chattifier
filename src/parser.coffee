@@ -2,22 +2,15 @@ markdown = require("markdown").markdown
 
 class Parser
   constructor: (content) ->
-    @state   = 'init'
     @content = content
 
-  # convert to markdown
-  toMarkdown: ->
-    @state = 'toMarkdown'
-
+  # convert content into markdown
+  parse: ->
     # split into lines and iterate:
     # 1. trim whitespaces
     # 2. remove special quote chars such as ">"
     lines = @content.split /\r?\n/
-    cleanedLines = []
-    for line in lines
-      cleanedLines.push @removeSpecialChars(line.trim()).trim()
-
-    @content = cleanedLines.join "\n"
+    @content = (@removeSpecialChars(l.trim()).trim() for l in lines).join "\n"
 
     # remove "forwarded message"-type headers
     @content = @removeForwardedMsgHeaders @content
@@ -30,7 +23,7 @@ class Parser
     @content = @content.replace /(#)/g, "\\$1"
 
     # tag all "On...wrote:" occurrences with # symbol
-    replacer = (match) =>
+    @content = @content.replace /On [\s\S]*?wrote(:|;)/g, (match) =>
       match = match.replace /\r?\n/g, " "
       # remove any unwanted characters and strings
       match = match.replace /([\[\]<>]|mailto:|javascript:;)/g, ""
@@ -38,65 +31,51 @@ class Parser
       match = @emailToHyperlink(match)
       "\n# " + match + "\n"
 
-    @content = @content.replace /On [\s\S]*?wrote(:|;)/g, replacer
-    this
-
-  # convert to html
+  # convert content into html
   toHTML: ->
-    @state = 'toHTML'
-
     parsedTree = markdown.toHTMLTree markdown.parse @content
     outputTree = [parsedTree[0], ["div"]]
-    i = 1
+    count = 1
 
     for el in parsedTree[1..]
       if el[0] == "h1"
         outputTree.push ["div"]
-        i += 1
+        count += 1
 
-      outputTree[i].push el
+      outputTree[count].push el
 
-    @content = markdown.renderJsonML outputTree
-    this
+    markdown.renderJsonML outputTree
 
-  # log to console
-  # for debugging only
-  log: ->
-    state = "state: " + @state
-    content  = "content: " + @content
-    msg = "{ " + ([state, content].join "\n") + " }"
-    console.log msg
-    this
-
+  # convert email to a hyperlink
   emailToHyperlink: (str) ->
     emailRegex = /([a-zA-Z0-9_!#$%&'*+\/=?`{|}~^.-]+@[a-zA-Z0-9.-]+)/
+
     str.replace emailRegex, "[$1](mailto:$1)"
 
+  # remove special blockquote characters
   removeSpecialChars: (str) ->
-    regex = /^(?:>\s*){1,}/
-    str.replace regex, ""
+    str.replace /^(?:>\s*){1,}/, ""
 
+  # split text content into substrings such that each substring
+  # contains at most one "From...To..." block
   splitByFromTag: (str) ->
     mainRegex = /From:[\s\S]*?(To|Subject|Date|Cc|Sent):/g
-    substrings = []
-    matchIndices = (match.index while match = mainRegex.exec str)
+    indices = (match.index while match = mainRegex.exec str)
 
     # check if zero index in the array
-    if 0 not in matchIndices
-      matchIndices.splice 0, 0, 0
+    if 0 not in indices
+      indices.splice 0, 0, 0
 
     # add the last index to the array
-    matchIndices.push str.length
+    indices.push str.length
 
-    for i in [0...matchIndices.length-1]
-      substrings.push str[matchIndices[i]...matchIndices[i+1]]
+    (str[indices[i]...indices[i+1]] for i in [0...indices.length-1])
 
-    return substrings
-
+  # replace "From...To..." blocks with one-liners "On...wrote:"
   replaceFromToBlocks: (str) ->
     blockRegex = /From:([\s\S]*?(To|Subject|Date|Cc|Sent):){3,}.*\n/
 
-    replacer = (match) =>
+    str.replace blockRegex, (match) ->
       match = match.replace /\r?\n/g, " "
       from = (/From:(.*?)(To|Subject|Date|Cc|Sent):/.exec match)[1].trim()
       dateMatch = /(Date|Sent):(.*?)(To|Subject|Cc):/.exec match
@@ -104,8 +83,7 @@ class Parser
       date = dateMatch[2].trim()
       "On " + date + ", " + from + " wrote:\n\n"
 
-    str.replace blockRegex, replacer
-
+  # remove "Forwarded message"-type headers
   removeForwardedMsgHeaders: (str) ->
     regex = /(-+ Forwarded message -+|Begin forwarded message:)([\s\n]+)/g
 

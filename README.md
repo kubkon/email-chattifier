@@ -5,7 +5,7 @@ Email Chattifier is a simple Google Chrome extension that serves one simple purp
 
 Currently, it only supports GMail web client, and performs the following 3 fundamental functions:
 + remove any blockquote elements
-+ convert "From:...To:..."" blocks into a one-liner "On...wrote:"
++ convert "From:...To:..." blocks into a one-liner "On...wrote:"
 + separates "On...wrote:" blocks into alternately coloured paragraph blocks
 
 In the future, it is also meant to provide the following functionality:
