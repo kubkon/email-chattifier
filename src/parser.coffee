@@ -93,10 +93,13 @@ class Parser
 
     (str[indices[i]...indices[i+1]] for i in [0...indices.length-1])
 
+  # split text into blocks by "From:" tag
   splitByFromTag: (str) ->
     regex = /From:[\s\S]*?(To|Subject|Date|Cc|Sent):/g
     @splitBy regex, str
 
+  # strip any email signatures matching simple regex
+  # from a string
   stripEmailSignatures: (str) ->
     regex = /// (
       (-){2,}?[\s\w]*|
