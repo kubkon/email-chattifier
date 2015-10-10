@@ -31,6 +31,10 @@ class Parser
       match = @emailToHyperlink(match)
       "\n# " + match + "\n"
 
+    # remove email signatures
+    blocks = @splitBy /[^\\]#/g, @content
+    @content = (@stripEmailSignatures b for b in blocks).join "\n"
+
   # convert content into html
   toHTML: (cssClass) ->
     parsedTree = markdown.toHTMLTree markdown.parse @content
@@ -57,20 +61,11 @@ class Parser
   removeSpecialChars: (str) ->
     str.replace /^(?:>\s*){1,}/, ""
 
-  # split text content into substrings such that each substring
-  # contains at most one "From...To..." block
-  splitByFromTag: (str) ->
-    mainRegex = /From:[\s\S]*?(To|Subject|Date|Cc|Sent):/g
-    indices = (match.index while match = mainRegex.exec str)
+  # remove "Forwarded message"-type headers
+  removeForwardedMsgHeaders: (str) ->
+    regex = /(-+ Forwarded message -+|Begin forwarded message:)([\s\n]+)/g
 
-    # check if zero index in the array
-    if 0 not in indices
-      indices.splice 0, 0, 0
-
-    # add the last index to the array
-    indices.push str.length
-
-    (str[indices[i]...indices[i+1]] for i in [0...indices.length-1])
+    str.replace regex, "$2"
 
   # replace "From...To..." blocks with one-liners "On...wrote:"
   replaceFromToBlocks: (str) ->
@@ -84,11 +79,36 @@ class Parser
       date = dateMatch[2].trim()
       "On " + date + ", " + from + " wrote:\n\n"
 
-  # remove "Forwarded message"-type headers
-  removeForwardedMsgHeaders: (str) ->
-    regex = /(-+ Forwarded message -+|Begin forwarded message:)([\s\n]+)/g
+  # split text content into substrings such that each substring
+  # contains at most one block that matches the regex
+  splitBy: (regex, str) ->
+    indices = (match.index while match = regex.exec str)
 
-    str.replace regex, "$2"
+    # check if zero index in the array
+    if 0 not in indices
+      indices.splice 0, 0, 0
+
+    # add the last index to the array
+    indices.push str.length
+
+    (str[indices[i]...indices[i+1]] for i in [0...indices.length-1])
+
+  splitByFromTag: (str) ->
+    regex = /From:[\s\S]*?(To|Subject|Date|Cc|Sent):/g
+    @splitBy regex, str
+
+  stripEmailSignatures: (str) ->
+    regex = /// (
+      (-){2,}?[\s\w]*|
+      Sent\ from(\n| )|
+      Sent\ from\ my\ iPhone
+    ) ///g
+    
+    index = str.search regex
+    if index > -1
+      str = str.slice(0, index)
+    
+    str
 
 
 module.exports = Parser

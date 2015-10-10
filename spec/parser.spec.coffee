@@ -130,3 +130,49 @@ describe "Test Parser class", ->
     expect(parser.removeForwardedMsgHeaders text).
       toEqual "  \n"
 
+  it "tests stripping email signatures within a string", ->
+    parser = new Parser ""
+    text = "Hi there,\nHow are you?\n Best,\n John\n\n-- JD\nCEO & CEO\n\n"
+    expect(parser.stripEmailSignatures text).
+      toEqual "Hi there,\nHow are you?\n Best,\n John\n\n"
+
+    text = "Hi there,\nHow are you?\n Best,\n John-- JD\nCEO & CEO\n\n"
+    expect(parser.stripEmailSignatures text).
+      toEqual "Hi there,\nHow are you?\n Best,\n John"
+
+    text = "Hi there,\nHow are you?\n Best,\n John -- JD\nCEO & CEO\n\n"
+    expect(parser.stripEmailSignatures text).
+      toEqual "Hi there,\nHow are you?\n Best,\n John "
+
+    text = "Hi there,\nHow are you?\n Best,\n John--JD\nCEO & CEO\n\n"
+    expect(parser.stripEmailSignatures text).
+      toEqual "Hi there,\nHow are you?\n Best,\n John"
+
+    text = "Hi there,\nHow are you?\n Best,\n John--\nJD\nCEO & CEO\n\n"
+    expect(parser.stripEmailSignatures text).
+      toEqual "Hi there,\nHow are you?\n Best,\n John"
+
+    text = "Hi there,\nHow are you?\n Best,\n John\nSent from my iPhone\n--\nJD\nCEO & CEO\n\n"
+    expect(parser.stripEmailSignatures text).
+      toEqual "Hi there,\nHow are you?\n Best,\n John\n"
+
+    text = "Hi there,\nHow are you?\n Best,\n JohnSent from my iPhone\n--\nJD\nCEO & CEO\n\n"
+    expect(parser.stripEmailSignatures text).
+      toEqual "Hi there,\nHow are you?\n Best,\n John"
+
+    text = "Hi there,\nHow are you?\n Best,\n JohnSent from\nmy iPhone\n--\nJD\nCEO & CEO\n\n"
+    expect(parser.stripEmailSignatures text).
+      toEqual "Hi there,\nHow are you?\n Best,\n John"
+
+    text = "Hi there,\nHow are you?\n Best,\n John Sent from\n Outlook\n--\nJD\nCEO & CEO\n\n"
+    expect(parser.stripEmailSignatures text).
+      toEqual "Hi there,\nHow are you?\n Best,\n John "
+
+    text = "Hi there,\nHow are you?\n Best,\n JohnSent from Outlook\n--\nJD\nCEO & CEO\n\n"
+    expect(parser.stripEmailSignatures text).
+      toEqual "Hi there,\nHow are you?\n Best,\n John"
+
+    text = "Hi there,\nHow are you?\n Best,\n -JohnSent from Outlook\n--\nJD\nCEO & CEO\n\n"
+    expect(parser.stripEmailSignatures text).
+      toEqual "Hi there,\nHow are you?\n Best,\n -John"
+
