@@ -1,6 +1,8 @@
 Parser = require "./Parser.js"
 
 class Chattifier
+  @cssClass = "chattifier"
+
   constructor: ->
     @ancestorNode = null
 
@@ -20,7 +22,7 @@ class Chattifier
     # parse the text content into Markdown
     parser = new Parser @ancestorNode.textContent
     parser.parse()
-    @ancestorNode.innerHTML = parser.toHTML()
+    @ancestorNode.innerHTML = parser.toHTML(Chattifier.cssClass)
 
     # postprocess HTML
     @colorEncode()
@@ -93,21 +95,21 @@ class Chattifier
   # creates a new stylesheet for color encoding of the
   # generated blocks, and applies some rudimentary CSS
   colorEncode: ->
-    divs = @ancestorNode.getElementsByTagName "div"
+    divs = @ancestorNode.getElementsByClassName Chattifier.cssClass
     classes = ['first', 'second']
     for div, i in divs
-      div.className = "chattifier " + classes[i % 2]
+      div.className = [div.className, classes[i % 2]].join " "
 
     # create new stylesheet
     style = document.createElement "style"
     style.appendChild document.createTextNode ""
     document.head.appendChild style
 
-    style.sheet.insertRule "div.chattifier { margin: 2px; display: block; }", 0
-    style.sheet.insertRule "div.chattifier > h1 { margin-bottom: 4px;
+    style.sheet.insertRule "div." + Chattifier.cssClass + " { margin: 2px; display: block; }", 0
+    style.sheet.insertRule "div." + Chattifier.cssClass + " > h1 { margin-bottom: 4px;
                             font-size: 15px;
                             font-family: Georgia,'Times New Roman','Bitstream Charter',Times,serif; }", 0
-    style.sheet.insertRule "div.chattifier > p { margin: 2px;
+    style.sheet.insertRule "div." + Chattifier.cssClass + " > p { margin: 2px;
                             font-size: 15px;
                             font-family: Arial,'Bitstream Vera Sans',Helvetica,Verdana,sans-serif; }", 0
 

@@ -32,18 +32,19 @@ class Parser
       "\n# " + match + "\n"
 
   # convert content into html
-  toHTML: ->
+  toHTML: (cssClass) ->
     parsedTree = markdown.toHTMLTree markdown.parse @content
-    outputTree = [parsedTree[0], ["div"]]
+    outputTree = [parsedTree[0], ["div", { class: cssClass }]]
     count = 1
 
     for el in parsedTree[1..]
       if el[0] == "h1"
-        outputTree.push ["div"]
+        outputTree.push ["div", { class: cssClass }]
         count += 1
 
       outputTree[count].push el
 
+    # console.log markdown.renderJsonML outputTree
     markdown.renderJsonML outputTree
 
   # convert email to a hyperlink
