@@ -1,6 +1,10 @@
 Email Chattifier
 ===
 
+
+[![Build Status](https://travis-ci.org/kubkon/email-chattifier.svg?branch=master)](https://travis-ci.org/kubkon/email-chattifier)
+
+
 Email Chattifier is a simple Google Chrome extension that serves one simple purpose: to re-format your email conversation into something more readable, like a chat archive. You can download and install it in your Chrome browser following this link: [chrome.google.com](https://chrome.google.com/webstore/detail/email-chattifier/pcjnciejhladedpdmiokgpeanfejiofa).
 
 Currently, it only supports GMail web client, and performs the following 3 fundamental functions:
