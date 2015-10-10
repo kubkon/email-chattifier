@@ -25,12 +25,6 @@ Furthermore, since the app is meant to run in the browser, and since it features
 $ npm install -g browserify
 ```
 
-If you want to run unit tests, you need `jasmine-node`. You can obtain it using the following command:
-
-```
-$ npm install -g jasmine-node
-```
-
 Finally, to install the libraries the app depends on, simply run:
 
 ```
@@ -53,10 +47,10 @@ $ browserify dist/main.js > dist/bundle.js
 And that's you done. Now you can upload the folder `dist` to Google Chrome.
 
 ## Testing
-The code can be tested running `jasmine` test engine. This can be accomplished as follows:
+The project uses `jasmine-node` to run the unit tests. `jasmine-node` will be automatically installed in the project's root folder when you run `npm install`. Afterwards, to test the code just run:
 
 ```
-$ jasmine-node --coffee spec
+$ npm test
 ```
 
 ## Found a bug?
