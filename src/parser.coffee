@@ -36,16 +36,32 @@ class Parser
     parsedTree = markdown.toHTMLTree markdown.parse @content
     outputTree = [parsedTree[0], ["div", { class: cssClass }]]
     count = 1
+    ignore = false
 
     for el in parsedTree[1..]
       if el[0] == "h1"
         outputTree.push ["div", { class: cssClass }]
         count += 1
+        ignore = false
 
-      outputTree[count].push el
+      if el[0] == "p" and typeof el[1] == "string"
+        if @matchSignature el[1]
+          ignore = true
+
+      if not ignore
+        console.log el
+        outputTree[count].push el
 
     # console.log markdown.renderJsonML outputTree
     markdown.renderJsonML outputTree
+
+  matchSignature: (str) ->
+    regex = /// ^ (
+      (-){2,}?[\s\w]*|
+      Sent\ from(\n| )
+    ) ///
+
+    regex.test str
 
   # convert email to a hyperlink
   emailToHyperlink: (str) ->

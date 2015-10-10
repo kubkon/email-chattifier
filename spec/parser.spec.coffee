@@ -130,3 +130,65 @@ describe "Test Parser class", ->
     expect(parser.removeForwardedMsgHeaders text).
       toEqual "  \n"
 
+  it "tests matching email signatures", ->
+    parser = new Parser ""
+    text = "-John"
+    expect(parser.matchSignature text).
+      toBe false
+
+    text = "--John"
+    expect(parser.matchSignature text).
+      toBe true
+
+    text = "-- John Doe"
+    expect(parser.matchSignature text).
+      toBe true
+
+    text = "--- John Doe"
+    expect(parser.matchSignature text).
+      toBe true
+
+    text = "---\nJohn Doe"
+    expect(parser.matchSignature text).
+      toBe true
+
+    text = "--- John\nDoe"
+    expect(parser.matchSignature text).
+      toBe true
+
+    text = "--- J.D., CEO & CTO\n123"
+    expect(parser.matchSignature text).
+      toBe true
+
+    text = "-"
+    expect(parser.matchSignature text).
+      toBe false
+
+    text = "-\n"
+    expect(parser.matchSignature text).
+      toBe false
+
+    text = "- "
+    expect(parser.matchSignature text).
+      toBe false
+
+    text = "--"
+    expect(parser.matchSignature text).
+      toBe true
+
+    text = "-- "
+    expect(parser.matchSignature text).
+      toBe true
+
+    text = "--\n"
+    expect(parser.matchSignature text).
+      toBe true
+
+    text = "Sent from\n"
+    expect(parser.matchSignature text).
+      toBe true
+
+    text = "Sent from "
+    expect(parser.matchSignature text).
+      toBe true
+
