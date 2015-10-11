@@ -6,7 +6,8 @@ class Chattifier
     alternatingColors: ['#FFF', '#F4F4F4']
   }
 
-  constructor: ->
+  constructor: (document) ->
+    @document = document
     @ancestorNode = null
 
   # rerender the email conversation
@@ -38,7 +39,7 @@ class Chattifier
   inferAncestorNode: ->
     # check if blockquote exist, and get their
     # parent if they do
-    blockquotes = document.body.getElementsByTagName "blockquote"
+    blockquotes = @document.body.getElementsByTagName "blockquote"
     if blockquotes.length > 0
       @ancestorNode = blockquotes[0].parentNode
       return
@@ -46,7 +47,7 @@ class Chattifier
     # don't give up just yet; check for special indendation
     # characters such as ">" and get the parentNode of their
     # element
-    allElements = Array.prototype.slice.call document.body.getElementsByTagName "*"
+    allElements = Array.prototype.slice.call @document.body.getElementsByTagName "*"
     searchedEl = []
     scores = []
     for el in allElements.reverse()
@@ -76,11 +77,11 @@ class Chattifier
   insertNewLinesIntoDivsAndSpans: ->
     divs = @ancestorNode.getElementsByTagName "div"
     for div in divs
-      div.appendChild document.createTextNode "\n\n"
+      div.appendChild @document.createTextNode "\n\n"
 
     spans = @ancestorNode.getElementsByTagName "span"
     for span in spans
-      span.appendChild document.createTextNode "\n\n"
+      span.appendChild @document.createTextNode "\n\n"
 
   # removes all blockquote elements and substitutes them
   # for p elements
@@ -91,8 +92,8 @@ class Chattifier
       bq = blockquotes[0]
       bqHtml = bq.innerHTML
       parent = bq.parentNode
-      newChild = document.createElement "p"
-      newChild.insertAdjacentHTML 'afterbegin', bqHtml
+      newChild = @document.createElement "p"
+      newChild.innerHTML = bqHtml
       parent.insertBefore newChild, bq
       parent.removeChild bq
       blockquotes = @ancestorNode.getElementsByTagName "blockquote"
@@ -108,12 +109,12 @@ class Chattifier
   #   ...
   groupIntoDivs: ->
     headerTag = "h" + Chattifier.headerStartLevel
-    divs = [document.createElement "div"]
+    divs = [@document.createElement "div"]
     count = 0
     
     for child in @ancestorNode.children
       if child.tagName.toLowerCase() == headerTag
-        divs.push document.createElement "div"
+        divs.push @document.createElement "div"
         count += 1
 
       divs[count].appendChild child.cloneNode true
@@ -136,7 +137,7 @@ class Chattifier
   colorEncode: ->
     style = document.createElement "style"
     style.appendChild document.createTextNode ""
-    document.head.appendChild style
+    @document.head.appendChild style
 
     css = "div." +
           Chattifier.cssAttrs.mainClass +
