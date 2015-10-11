@@ -2,6 +2,11 @@ Parser = require "./Parser.js"
 
 class Chattifier
   @headerStartLevel = 4
+  @cssAttrs = {
+    mainClass: "chattifier",
+    alternatingClasses: ["first", "second"],
+    alternatingColors: ['#FFF', '#F4F4F4']
+  }
 
   constructor: ->
     @ancestorNode = null
@@ -25,7 +30,7 @@ class Chattifier
     @ancestorNode.innerHTML = parser.toHTML Chattifier.headerStartLevel
 
     # postprocess HTML
-    @groupInDivs()
+    @groupIntoDivs()
     @colorEncode()
 
     return true
@@ -93,7 +98,16 @@ class Chattifier
       parent.removeChild bq
       blockquotes = @ancestorNode.getElementsByTagName "blockquote"
 
-  groupInDivs: ->
+  # groups the elements into divs such that each div contains
+  # one heading element only such that:
+  # <div>
+  #   <h4>On...wrote:</h4>
+  #   <p>...</p>
+  # </div>
+  # <div>
+  #   <h4>On...wrote:</h4>
+  #   ...
+  groupIntoDivs: ->
     headerTag = "h" + Chattifier.headerStartLevel
     divs = [document.createElement "div"]
     count = 0
@@ -111,9 +125,11 @@ class Chattifier
 
     # re-populate the ancestor with new children
     # and CSS classes
-    classes = ['first', 'second']
     for div, i in divs
-      div.className = "chattifier " + classes[i % 2]
+      div.className = [
+        Chattifier.cssAttrs.mainClass,
+        Chattifier.cssAttrs.alternatingClasses[i % 2]
+      ].join " "
       @ancestorNode.appendChild div
 
   # creates a new stylesheet for color encoding of the
@@ -123,12 +139,16 @@ class Chattifier
     style.appendChild document.createTextNode ""
     document.head.appendChild style
 
-    style.sheet.insertRule "div.chattifier { margin: 2px; display: block; }", 0
-    colors = ['#FFF', '#F4F4F4']
-    classes = ['first', 'second']
-    for cl, i in classes
-      clStyle = ".chattifier." + cl + " { background-color: " + colors[i] + "; }"
-      style.sheet.insertRule clStyle, 0
+    css = "div." +
+          Chattifier.cssAttrs.mainClass +
+          " { margin: 2px; display: block; }"
+    style.sheet.insertRule css, 0 
+    for cl, i in Chattifier.cssAttrs.alternatingClasses
+      css = [".", Chattifier.cssAttrs.mainClass, ".", cl].join ""
+      css += " { background-color: " +
+             Chattifier.cssAttrs.alternatingColors[i] +
+             "; }"
+      style.sheet.insertRule css, 0
 
 
 module.exports = Chattifier
