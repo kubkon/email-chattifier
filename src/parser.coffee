@@ -1,5 +1,3 @@
-showdown = require("showdown")
-
 class Parser
   constructor: (content) ->
     @content = content
@@ -37,6 +35,7 @@ class Parser
 
   # convert content into html
   toHTML: (headerStartLevel) ->
+    showdown = require("showdown")
     converter = new showdown.Converter()
     converter.setOption 'noHeaderId', true
     converter.setOption 'headerLevelStart', headerStartLevel

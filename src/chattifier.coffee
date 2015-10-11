@@ -1,5 +1,3 @@
-Parser = require "./Parser.js"
-
 class Chattifier
   @headerStartLevel = 4
   @cssAttrs = {
@@ -25,6 +23,7 @@ class Chattifier
     @removeBlockquotes()
       
     # parse the text content into Markdown
+    Parser = require "./Parser.js"
     parser = new Parser @ancestorNode.textContent
     parser.parse()
     @ancestorNode.innerHTML = parser.toHTML Chattifier.headerStartLevel

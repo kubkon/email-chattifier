@@ -1,0 +1,10 @@
+{
+  "spec_dir": "spec",
+  "spec_files": [
+    "parser.spec.coffee",
+    "chattifier.spec.coffee"
+  ],
+  "helpers": [
+    "helpers/CoffeeHelper.js"
+  ]
+}
