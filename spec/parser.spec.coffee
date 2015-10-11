@@ -3,8 +3,10 @@ Parser = require "../src/parser.coffee"
 describe "A suite of Parser tests", ->
   parser = {}
 
-  it "tests email formatting", ->
+  beforeEach ->
     parser = new Parser ""
+
+  it "tests email formatting", ->
     testData = [
       {
         input: "John Doe john.doe@abc.com wrote",
@@ -27,44 +29,44 @@ describe "A suite of Parser tests", ->
       expect(parser.emailToHyperlink t.input).
         toBe t.expected
 
-  it "tests removing special blockquote chars", ->
-    parser = new Parser ""
-    testData = [
-      {
-        input: ">",
-        expected: ""
-      },
-      {
-        input: ">>",
-        expected: ""
-      },
-      {
-        input: "> >",
-        expected: ""
-      },
-      {
-        input: "> >>",
-        expected: ""
-      },
-      {
-        input: ">> >",
-        expected: ""
-      },
-      {
-        input: ">>>",
-        expected: ""
-      },
-      {
-        input: " >",
-        expected: " >"
-      }
-    ]
-    for t in testData
-      expect(parser.removeSpecialChars t.input).
-        toBe t.expected
+  describe "any special blockquote characters", ->
+    it "are removed", ->
+      testData = [
+        {
+          input: ">",
+          expected: ""
+        },
+        {
+          input: ">>",
+          expected: ""
+        },
+        {
+          input: "> >",
+          expected: ""
+        },
+        {
+          input: "> >>",
+          expected: ""
+        },
+        {
+          input: ">> >",
+          expected: ""
+        },
+        {
+          input: ">>>",
+          expected: ""
+        }
+      ]
+      for t in testData
+        expect(parser.removeSpecialChars t.input).
+          toBe t.expected
+
+    it "unless they are not at the start of the string", ->
+      expect(parser.removeSpecialChars " >").
+        toBe " >"
+
 
   it "tests splitting string into substrings containing a From: tag", ->
-    parser = new Parser ""
     testData = [
       {
         input: "From: a@b.com\nTo: b@c.com\nSubject: Something\nDate: 01/01/2015",
@@ -96,7 +98,6 @@ describe "A suite of Parser tests", ->
         toEqual t.expected
 
   it "tests replacing From..To.. string into On...wrote:", ->
-    parser = new Parser ""
     testData = [
       {
         input: "From: a@b.com\nTo: b@c.com\nDate: 01/01/2015\nSubject: Something\n",
@@ -132,7 +133,6 @@ describe "A suite of Parser tests", ->
         toEqual t.expected
 
   it "tests removing forwarded message headers", ->
-    parser = new Parser ""
     testData = [
       {
         input: "------ Forwarded message ------\n",
@@ -171,59 +171,73 @@ describe "A suite of Parser tests", ->
       expect(parser.removeForwardedMsgHeaders t.input).
         toEqual t.expected
 
-  it "tests stripping email signatures within a string", ->
-    parser = new Parser ""
-    testData = [
-      {
-        input: "Hi there,\nHow are you?\n Best,\n John\n\n-- JD\nCEO & CEO\n\n",
-        expected: "Hi there,\nHow are you?\n Best,\n John\n\n"
-      },
-      {
-        input: "Hi there,\nHow are you?\n Best,\n John-- JD\nCEO & CEO\n\n",
-        expected: "Hi there,\nHow are you?\n Best,\n John-- JD\nCEO & CEO\n\n"
-      },
-      {
-        input: "Hi there,\nHow are you?\n Best,\n John \n-- JD\nCEO & CEO\n\n",
-        expected: "Hi there,\nHow are you?\n Best,\n John \n"
-      },
-      {
-        input: "Hi there,\nHow are you?\n Best,\n John\n--\nJD\nCEO & CEO\n\n",
-        expected: "Hi there,\nHow are you?\n Best,\n John\n"
-      },
-      {
-        input: "Hi there,\nHow are you?\n Best,\n John--\nJD\nCEO & CEO\n\n",
-        expected: "Hi there,\nHow are you?\n Best,\n John--\nJD\nCEO & CEO\n\n"
-      },
-      {
-        input: "Hi there,\nHow are you?\n Best,\n John\nSent from my iPhone\n--\nJD\nCEO & CEO\n\n",
-        expected: "Hi there,\nHow are you?\n Best,\n John\n"
-      },
-      {
-        input: "Hi there,\nHow are you?\n Best,\n JohnSent from my iPhone\n--\nJD\nCEO & CEO\n\n",
-        expected: "Hi there,\nHow are you?\n Best,\n John"
-      },
-      {
-        input: "Hi there,\nHow are you?\n Best,\n JohnSent from\nmy iPhone\n--\nJD\nCEO & CEO\n\n",
-        expected: "Hi there,\nHow are you?\n Best,\n John"
-      },
-      {
-        input: "Hi there,\nHow are you?\n Best,\n John Sent from\n Outlook\n--\nJD\nCEO & CEO\n\n",
-        expected: "Hi there,\nHow are you?\n Best,\n John "
-      },
-      {
-        input: "Hi there,\nHow are you?\n Best,\n JohnSent from Outlook\n--\nJD\nCEO & CEO\n\n",
-        expected: "Hi there,\nHow are you?\n Best,\n John"
-      },
-      {
-        input: "Hi there,\nHow are you?\n Best,\n -JohnSent from Outlook\n--\nJD\nCEO & CEO\n\n",
-        expected: "Hi there,\nHow are you?\n Best,\n -John"
-      },
-      {
-        input: "well, right -- this is just how it is.",
-        expected: "well, right -- this is just how it is."
-      }
-    ]
-    for t in testData
-      expect(parser.stripEmailSignatures t.input).
-        toEqual t.expected
+  describe "email signatures are stripped within a string if", ->
+    it "contains a Sent from (my iPhone|Outlook) phease", ->
+      testData = [
+        {
+          input: "Hi there,\nHow are you?\n Best,\n John\nSent from my iPhone\n--\nJD\nCEO & CEO\n\n",
+          expected: "Hi there,\nHow are you?\n Best,\n John\n"
+        },
+        {
+          input: "Hi there,\nHow are you?\n Best,\n JohnSent from my iPhone\n--\nJD\nCEO & CEO\n\n",
+          expected: "Hi there,\nHow are you?\n Best,\n John"
+        },
+        {
+          input: "Hi there,\nHow are you?\n Best,\n JohnSent from\nmy iPhone\n--\nJD\nCEO & CEO\n\n",
+          expected: "Hi there,\nHow are you?\n Best,\n John"
+        },
+        {
+          input: "Hi there,\nHow are you?\n Best,\n John Sent from\n Outlook\n--\nJD\nCEO & CEO\n\n",
+          expected: "Hi there,\nHow are you?\n Best,\n John "
+        },
+        {
+          input: "Hi there,\nHow are you?\n Best,\n JohnSent from Outlook\n--\nJD\nCEO & CEO\n\n",
+          expected: "Hi there,\nHow are you?\n Best,\n John"
+        },
+        {
+          input: "Hi there,\nHow are you?\n Best,\n -JohnSent from Outlook\n--\nJD\nCEO & CEO\n\n",
+          expected: "Hi there,\nHow are you?\n Best,\n -John"
+        }
+      ]
+      for t in testData
+        expect(parser.stripEmailSignatures t.input).
+          toEqual t.expected
+
+    it "contains at least two dashes at the start of a new line", ->
+      testData = [
+        {
+          input: "Hi there,\nHow are you?\n Best,\n John\n\n-- JD\nCEO & CEO\n\n",
+          expected: "Hi there,\nHow are you?\n Best,\n John\n\n"
+        },
+        {
+          input: "Hi there,\nHow are you?\n Best,\n John \n-- JD\nCEO & CEO\n\n",
+          expected: "Hi there,\nHow are you?\n Best,\n John \n"
+        },
+        {
+          input: "Hi there,\nHow are you?\n Best,\n John\n--\nJD\nCEO & CEO\n\n",
+          expected: "Hi there,\nHow are you?\n Best,\n John\n"
+        }
+      ]
+      for t in testData
+        expect(parser.stripEmailSignatures t.input).
+          toEqual t.expected
+
+    it "does nothing otherwise", ->
+      testData = [
+        {
+          input: "Hi there,\nHow are you?\n Best,\n John-- JD\nCEO & CEO\n\n",
+          expected: "Hi there,\nHow are you?\n Best,\n John-- JD\nCEO & CEO\n\n"
+        },
+        {
+          input: "Hi there,\nHow are you?\n Best,\n John--\nJD\nCEO & CEO\n\n",
+          expected: "Hi there,\nHow are you?\n Best,\n John--\nJD\nCEO & CEO\n\n"
+        },
+        {
+          input: "well, right -- this is just how it is.",
+          expected: "well, right -- this is just how it is."
+        }
+      ]
+      for t in testData
+        expect(parser.stripEmailSignatures t.input).
+          toEqual t.expected
 
