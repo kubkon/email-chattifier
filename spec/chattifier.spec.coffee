@@ -56,24 +56,11 @@ describe "A suite of Chattifier tests", ->
         toEqual link
 
   it "tests removing blockquote elements and preserving its HTML content", ->
-    # create mock documentument containing blockquote elements
-    # outer blockquote
-    bq1 = document.createElement 'blockquote'
-    p = document.createElement 'p'
-    p.textContent = 'Outer blockquote'
-    bq1.appendChild p
-    # inner blockquote
-    bq2 = document.createElement 'blockquote'
-    p = document.createElement 'p'
-    p.textContent = 'Inner blockquote'
-    bq2.appendChild p
-    bq1.appendChild bq2
-    node.appendChild bq1
-
-    # sanity test
-    html = "<blockquote><p>Outer blockquote</p><blockquote><p>Inner blockquote</p></blockquote></blockquote>"
-    expect(node.innerHTML).
-      toEqual html
+    # create mock document containing blockquote elements
+    html = "<blockquote><p>Outer blockquote</p>" +
+           "<blockquote><p>Inner blockquote</p>" +
+           "</blockquote></blockquote>"
+    node.innerHTML = html
 
     # run chattifier
     chattifier.removeBlockquotes()
@@ -85,4 +72,51 @@ describe "A suite of Chattifier tests", ->
     html = "<p><p>Outer blockquote</p><p><p>Inner blockquote</p></p></p>"
     expect(node.innerHTML).
       toEqual html
+
+  describe "the HTML output should be grouped into divs regardless if", ->
+    it "has a header element as the topmost element, or if", ->
+      # create mock document of the following structure
+      h = "h" + Chattifier.headerStartLevel
+      html = "<" + h + "><p>First</p></" + h + ">" +
+             "<" + h + "><p>Second</p></" + h + ">"
+      node.innerHTML = html
+
+      # run chattifier
+      chattifier.groupIntoDivs()
+
+      # test output
+      html = '<div class="' + Chattifier.cssAttrs.mainClass + ' ' +
+             Chattifier.cssAttrs.alternatingClasses[0] + '"></div>' +
+             '<div class="' + Chattifier.cssAttrs.mainClass + ' ' +
+             Chattifier.cssAttrs.alternatingClasses[1] + '">' +
+             '<' + h + '><p>First</p></' + h + '></div>' +
+             '<div class="' + Chattifier.cssAttrs.mainClass + ' ' +
+             Chattifier.cssAttrs.alternatingClasses[0] + '">' +
+             '<' + h + '><p>Second</p></' + h + '></div>'
+      expect(node.innerHTML).
+        toEqual html
+
+    it "has a paragraph element as the topmost element", ->
+      # create mock document of the following structure
+      h = "h" + Chattifier.headerStartLevel
+      html = "<p>Zero</p>" +
+             "<" + h + "><p>First</p></" + h + ">" +
+             "<" + h + "><p>Second</p></" + h + ">"
+      node.innerHTML = html
+
+      # run chattifier
+      chattifier.groupIntoDivs()
+
+      # test output
+      html = '<div class="' + Chattifier.cssAttrs.mainClass + ' ' +
+             Chattifier.cssAttrs.alternatingClasses[0] + '">' +
+             '<p>Zero</p></div>' +
+             '<div class="' + Chattifier.cssAttrs.mainClass + ' ' +
+             Chattifier.cssAttrs.alternatingClasses[1] + '">' +
+             '<' + h + '><p>First</p></' + h + '></div>' +
+             '<div class="' + Chattifier.cssAttrs.mainClass + ' ' +
+             Chattifier.cssAttrs.alternatingClasses[0] + '">' +
+             '<' + h + '><p>Second</p></' + h + '></div>'
+      expect(node.innerHTML).
+        toEqual html
 
