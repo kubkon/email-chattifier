@@ -1,4 +1,4 @@
-markdown = require("markdown").markdown
+showdown = require("showdown")
 
 class Parser
   constructor: (content) ->
@@ -36,20 +36,11 @@ class Parser
     @content = (@stripEmailSignatures b for b in blocks).join "\n"
 
   # convert content into html
-  toHTML: (cssClass) ->
-    parsedTree = markdown.toHTMLTree markdown.parse @content
-    outputTree = [parsedTree[0], ["div", { class: cssClass }]]
-    count = 1
-
-    for el in parsedTree[1..]
-      if el[0] == "h1"
-        outputTree.push ["div", { class: cssClass }]
-        count += 1
-
-      outputTree[count].push el
-
-    # console.log markdown.renderJsonML outputTree
-    markdown.renderJsonML outputTree
+  toHTML: (headerStartLevel) ->
+    converter = new showdown.Converter()
+    converter.setOption 'noHeaderId', true
+    converter.setOption 'headerLevelStart', headerStartLevel
+    converter.makeHtml @content
 
   # convert email to a hyperlink
   emailToHyperlink: (str) ->

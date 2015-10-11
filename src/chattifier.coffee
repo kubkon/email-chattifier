@@ -1,7 +1,7 @@
 Parser = require "./Parser.js"
 
 class Chattifier
-  @cssClass = "chattifier"
+  @headerStartLevel = 4
 
   constructor: ->
     @ancestorNode = null
@@ -22,9 +22,10 @@ class Chattifier
     # parse the text content into Markdown
     parser = new Parser @ancestorNode.textContent
     parser.parse()
-    @ancestorNode.innerHTML = parser.toHTML(Chattifier.cssClass)
+    @ancestorNode.innerHTML = parser.toHTML Chattifier.headerStartLevel
 
     # postprocess HTML
+    @groupInDivs()
     @colorEncode()
 
     return true
@@ -92,30 +93,41 @@ class Chattifier
       parent.removeChild bq
       blockquotes = @ancestorNode.getElementsByTagName "blockquote"
 
+  groupInDivs: ->
+    headerTag = "h" + Chattifier.headerStartLevel
+    divs = [document.createElement "div"]
+    count = 0
+    
+    for child in @ancestorNode.children
+      if child.tagName.toLowerCase() == headerTag
+        divs.push document.createElement "div"
+        count += 1
+
+      divs[count].appendChild child.cloneNode true
+
+    # remove all children from the ancestor node
+    while @ancestorNode.hasChildNodes()
+      @ancestorNode.removeChild @ancestorNode.lastChild
+
+    # re-populate the ancestor with new children
+    # and CSS classes
+    classes = ['first', 'second']
+    for div, i in divs
+      div.className = "chattifier " + classes[i % 2]
+      @ancestorNode.appendChild div
+
   # creates a new stylesheet for color encoding of the
   # generated blocks, and applies some rudimentary CSS
   colorEncode: ->
-    divs = @ancestorNode.getElementsByClassName Chattifier.cssClass
-    classes = ['first', 'second']
-    for div, i in divs
-      div.className = [div.className, classes[i % 2]].join " "
-
-    # create new stylesheet
     style = document.createElement "style"
     style.appendChild document.createTextNode ""
     document.head.appendChild style
 
-    style.sheet.insertRule "div." + Chattifier.cssClass + " { margin: 2px; display: block; }", 0
-    style.sheet.insertRule "div." + Chattifier.cssClass + " > h1 { margin-bottom: 4px;
-                            font-size: 15px;
-                            font-family: Georgia,'Times New Roman','Bitstream Charter',Times,serif; }", 0
-    style.sheet.insertRule "div." + Chattifier.cssClass + " > p { margin: 2px;
-                            font-size: 15px;
-                            font-family: Arial,'Bitstream Vera Sans',Helvetica,Verdana,sans-serif; }", 0
-
+    style.sheet.insertRule "div.chattifier { margin: 2px; display: block; }", 0
     colors = ['#FFF', '#F4F4F4']
+    classes = ['first', 'second']
     for cl, i in classes
-      clStyle = "." + cl + " { background-color: " + colors[i] + "; }"
+      clStyle = ".chattifier." + cl + " { background-color: " + colors[i] + "; }"
       style.sheet.insertRule clStyle, 0
 
 
