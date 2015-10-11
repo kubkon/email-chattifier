@@ -51,7 +51,7 @@ $ browserify dist/main.js > dist/bundle.js
 And that's you done. Now you can upload the folder `dist` to Google Chrome.
 
 ## Testing
-The project uses `jasmine-node` to run the unit tests. `jasmine-node` will be automatically installed in the project's root folder when you run `npm install`. Afterwards, to test the code just run:
+The project uses `jasmine` to run the unit tests. `jasmine` will be automatically installed in the project's root folder when you run `npm install`. Afterwards, to test the code just run:
 
 ```
 $ npm test
