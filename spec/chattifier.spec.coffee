@@ -1,7 +1,7 @@
 jsdom = require("jsdom").jsdom
 Chattifier = require "../src/chattifier.coffee"
 
-describe "Test Chattifier class", ->
+describe "A suite of Chattifier tests", ->
   chattifier = {}
   doc = {}
   node = {}
@@ -15,15 +15,43 @@ describe "Test Chattifier class", ->
     chattifier = new Chattifier()
     chattifier.ancestorNode = node
 
-  it "tests escaping hyperlinks", ->
-    a = doc.createElement 'a'
-    link = 'https://mail.google.com/0/12398sf'
-    a.innerText = link
-    node.appendChild a
+  describe "any existing hyperlink within the ancestor node", ->
+    it "should be escaped before parsing content", ->
+      links = [
+        'www.google.com',
+        'http://www.google.com',
+        'https://www.google.com',
+        'http://google.com',
+        'https://google.com',
+        'https://google.com/0/12398sf',
+        'https://chrome.google.com/webstore/detail/e-c/abcdefghijkslme?utm_source=gmail'
+      ]
+      # generate links of different structure
+      for link in links
+        a = doc.createElement 'a'
+        a.href = link
+        a.innerText = link
+        node.appendChild a
 
-    chattifier.escapeHyperlinks()
+      # run chattifier
+      chattifier.escapeHyperlinks()
 
-    for a in node.getElementsByTagName "a"
+      # test output
+      for a, i in node.getElementsByTagName "a"
+        expect(a.innerText).
+          toEqual "[" + links[i] + "](" + links[i] + ")"
+
+    it "unless it is an email address", ->
+      a = doc.createElement 'a'
+      link = 'john.doe@johnny.com'
+      a.href = 'mailto:' + link
+      a.innerText = link
+      node.appendChild a
+
+      # run chattifier
+      chattifier.escapeHyperlinks()
+
+      # test output
       expect(a.innerText).
-        toEqual "[" + link + "](" + link + ")"
+        toEqual link
 

@@ -1,6 +1,6 @@
 Parser = require "../src/parser.coffee"
 
-describe "Test Parser class", ->
+describe "A suite of Parser tests", ->
   parser = {}
 
   it "tests email formatting", ->
@@ -27,7 +27,7 @@ describe "Test Parser class", ->
       expect(parser.emailToHyperlink t.input).
         toBe t.expected
 
-  it "tests removing special chars", ->
+  it "tests removing special blockquote chars", ->
     parser = new Parser ""
     testData = [
       {
@@ -95,7 +95,7 @@ describe "Test Parser class", ->
       expect(parser.splitByFromTag t.input).
         toEqual t.expected
 
-  it "tests replacing From..To.. string into 'On...wrote:'", ->
+  it "tests replacing From..To.. string into On...wrote:", ->
     parser = new Parser ""
     testData = [
       {
@@ -131,7 +131,7 @@ describe "Test Parser class", ->
       expect(parser.replaceFromToBlocks t.input).
         toEqual t.expected
 
-  it "tests removing 'forwarded message' headers", ->
+  it "tests removing forwarded message headers", ->
     parser = new Parser ""
     testData = [
       {
